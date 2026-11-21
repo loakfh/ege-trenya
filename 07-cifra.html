@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ЕГЭ-треня · Цифра</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Science+Gothic:wdth,wght@50..200,100..900&family=Onest:wght@400..800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="core.js"></script>
+<style>
+:root{
+  --y:#FFD400; --k:#0A0A0A; --w:#FFFFFF; --c:#1F3AFF;
+  --d:'Science Gothic','Oswald','Arial Narrow',Impact,sans-serif;
+  --t:'Onest','Helvetica Neue',Arial,sans-serif;
+  --e:cubic-bezier(.23,1,.32,1); --io:cubic-bezier(.77,0,.175,1);
+}
+*{box-sizing:border-box}
+html{background:var(--y)}
+body{margin:0;background:var(--y);color:var(--k);font:500 17px/1.5 var(--t);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,p,ul{margin:0;padding:0}
+button{font:inherit;color:inherit;background:none;border:0;border-radius:0;padding:0;cursor:pointer;min-height:44px;min-width:44px;transition:transform 140ms var(--e);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:active{transform:scale(.97)}
+button:disabled{cursor:default}
+:focus-visible{outline:3px solid var(--c);outline-offset:3px}
+.coach :focus-visible,[data-task] :focus-visible{outline-color:var(--w)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.dsp{font-family:var(--d);font-weight:900;font-stretch:50%}
+/* контурная цифра: обводка рисуется под заливкой, наружу торчит половина толщины */
+.ol{color:var(--y);-webkit-text-stroke:var(--sw,4px) var(--k);paint-order:stroke fill}
+
+/* ───── кнопки-плиты ───── */
+.bk{background:var(--k);color:var(--w);font:700 19px/1.2 var(--t);padding:18px 30px;box-shadow:8px 8px 0 var(--c);min-height:60px}
+.bk.sm{padding:10px 20px;min-height:52px;box-shadow:none;font-size:17px}
+.bw{background:var(--w);border:3px solid var(--k);font:700 16px/1.2 var(--t);padding:8px 16px}
+.bq{font:600 16px/1.2 var(--t);padding:10px 4px;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.stk{display:inline-block;background:var(--w);border:2px solid var(--k);font:700 12px/1 var(--t);padding:4px 7px 5px;transform:rotate(-4deg);white-space:nowrap}
+@media (hover:hover) and (pointer:fine){
+  .bk:hover,.bw:hover,.opt:not(:disabled):hover,.pbtn:hover{transform:translate(-2px,-2px)}
+  .bk:active,.bw:active,.opt:not(:disabled):active,.pbtn:active{transform:scale(.97)}
+  .bq:hover{text-decoration-thickness:4px}
+  .bt:hover,.mbtn:hover,.mi:hover b,.hs:hover .ht{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+}
+
+/* ───── каркас ───── */
+.pg{position:relative;min-height:calc(100svh - 30px)}
+.top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:14px clamp(14px,4vw,56px) 6px}
+.brand{font:900 30px/1 var(--d);font-stretch:50%;letter-spacing:.01em}
+.pbtn{display:flex;align-items:baseline;gap:7px;background:var(--w);border:3px solid var(--k);box-shadow:4px 4px 0 var(--k);padding:4px 14px 6px;font:600 15px/1 var(--t)}
+.pbtn b{font:900 30px/1 var(--d);font-stretch:50%}
+.tr{display:flex;align-items:center;gap:14px}
+.mbtn{display:flex;align-items:center;gap:8px;font:600 15px/1 var(--t);padding:10px 8px}
+.mbtn::before{content:'';width:15px;height:7px;border:solid var(--k);border-width:2px 0}
+
+/* ───── главный экран и прощание: цифра как архитектура ───── */
+.pg.hero{overflow:clip;display:flex;flex-direction:column}
+.hero-n{position:absolute;right:-1vw;bottom:-19vh;z-index:0;font:900 108vh/1 var(--d);font-stretch:62%;letter-spacing:-.04em;pointer-events:none;user-select:none}
+.hero-n .of{position:absolute;left:-.6em;top:15%;font-size:20px;padding:8px 12px 9px;border-width:3px;transform:rotate(-5deg);box-shadow:5px 5px 0 var(--k);letter-spacing:0}
+.hero-c{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:2vh 24px 10vh clamp(130px,13vw,200px);max-width:calc(clamp(130px,13vw,200px) + 640px)}
+.kick{position:absolute;left:clamp(20px,3vw,48px);bottom:5vh;writing-mode:vertical-rl;transform:rotate(180deg);font:900 min(13vh,calc(72vh / (var(--n) * .66)))/.9 var(--d);font-stretch:50%;white-space:nowrap;--sw:5px}
+.kick .stk{writing-mode:horizontal-tb;position:absolute;left:-8px;bottom:-14px;transform:rotate(172deg);font-size:13px;-webkit-text-stroke:0;color:var(--k)}
+.hero h1{font:900 clamp(44px,4.4vw,72px)/.94 var(--d);font-stretch:50%;letter-spacing:-.015em;margin-bottom:22px}
+.hero .lead{font-size:19px;max-width:29em}
+.hero .sub{margin-top:10px;max-width:29em;font-weight:400}
+.recall{margin-top:22px;background:var(--w);border:3px solid var(--k);box-shadow:5px 5px 0 var(--k);padding:10px 18px;font-size:24px;transform:rotate(-1deg)}
+.hero .go{margin-top:38px;transform:rotate(-1deg)}
+.hero .go:active{transform:rotate(-1deg) scale(.97)}
+.hero .more{margin-top:26px;display:flex;flex-wrap:wrap;gap:4px 26px}
+
+/* ───── рабочий экран ───── */
+.g7{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;display:none}
+.g7 b{position:absolute;right:-96px;bottom:-.1em;font:900 min(88vh,800px)/1 var(--d);font-stretch:50%;color:var(--w)}
+.g7 b.i{color:var(--k);-webkit-text-stroke:2px var(--k)}
+.col{position:relative;z-index:1;width:min(1000px,100% - 28px);margin:0 auto;padding-bottom:8px}
+.task-w{position:sticky;top:0;z-index:6;background:var(--y);padding:10px 0 12px}
+.task{display:flex;align-items:stretch;background:var(--k);color:var(--w);overflow:hidden;min-height:84px}
+.task .no{flex:none;width:104px;position:relative;background:var(--y);border:4px solid var(--k);border-right:0;color:var(--k);overflow:hidden}
+.task .no i{position:absolute;left:8px;top:6px;font:800 15px/1 var(--t);font-style:normal}
+.task .no b{position:absolute;right:8px;top:18px;font:900 104px/.74 var(--d);font-stretch:50%}
+.task .f{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:3px;padding:9px 24px 10px;font-size:30px;overflow-x:auto;overflow-y:hidden}
+.task .tp{font:600 13px/1.2 var(--t);white-space:nowrap}
+.rows{display:flex;flex-direction:column;gap:24px;padding:14px 0 30px}
+.row{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);align-items:start;scroll-margin:130px 0 240px}
+.mine{position:relative;z-index:1;background:var(--w);border:3px solid var(--k);box-shadow:6px 6px 0 var(--k);padding:10px 12px 10px 20px;min-height:68px;display:flex;align-items:center;gap:10px;font-size:23px}
+.mine .fx{flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;padding:6px 0}
+.mine .fx>span{display:inline-block}
+.mine.retry .fx>span{border-bottom:3px dashed var(--k);padding-bottom:5px}
+.mine.old{box-shadow:none}
+.mine.old .fx{opacity:.6}
+.tag-re{position:absolute;right:14px;top:-15px;display:flex;align-items:center;gap:5px;background:var(--w);border:2px solid var(--k);font:700 12px/1 var(--t);padding:4px 8px 5px 6px;transform:rotate(2deg)}
+.tag-re svg{width:13px;height:13px;flex:none}
+.coach{position:relative;z-index:0;background:var(--c);color:var(--w);margin:16px 0 0 -12px;padding:14px 26px 16px 34px;font:500 16.5px/1.45 var(--t);clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,0 100%)}
+.coach .lb{display:inline-block;background:var(--w);color:var(--k);font:700 12.5px/1 var(--t);padding:4px 8px 5px;margin:0 8px 6px 0;vertical-align:2px}
+.coach .bw{display:block;margin-top:12px;border-color:var(--w);color:var(--k)}
+.coach .wait{opacity:.85}
+.row.solo .coach{grid-column:2;margin-top:0}
+.pop{animation:pop 220ms var(--e) both}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}}
+
+.dock{position:sticky;bottom:0;z-index:5;background:var(--y);border-top:3px solid var(--k);padding:8px 0 14px}
+.comp{position:relative}
+.prev{min-height:34px;font-size:19px;display:flex;align-items:center;gap:8px;overflow:hidden}
+.prev span{font:500 13px/1 var(--t)}
+.prev[data-empty]{visibility:hidden}
+.line{display:flex;gap:10px;align-items:stretch}
+#inp,#own{flex:1;min-width:0;font:500 19px/1.2 var(--t);color:var(--k);background:var(--w);border:3px solid var(--k);border-radius:0;box-shadow:5px 5px 0 var(--k);padding:13px 16px;margin:0 5px 5px 0;-webkit-appearance:none;appearance:none}
+#inp::placeholder,#own::placeholder{color:#5b5b5b;opacity:1}
+#inp:focus-visible,#own:focus-visible{outline:3px solid var(--c);outline-offset:2px}
+.line .bk{margin-bottom:5px}
+.line .help{margin-bottom:5px}
+.syms{display:flex;gap:6px;margin-top:8px}
+.syms button{width:46px;height:44px;background:var(--w);border:2px solid var(--k);font:600 18px/1 var(--t)}
+
+/* ───── разминка ───── */
+.ask .qn{font:700 14px/1 var(--t);margin-bottom:6px}
+.ask .q{font:800 34px/1.02 var(--d);font-stretch:62%;margin-bottom:16px}
+.ask .q .katex{font-size:.82em}
+.opts{display:flex;flex-direction:column;gap:14px;position:relative;z-index:1}
+.opt{display:grid;grid-template-columns:86px minmax(0,1fr);align-items:stretch;width:100%;min-height:86px;text-align:left;background:var(--w);border:3px solid var(--k);box-shadow:6px 6px 0 var(--k);overflow:hidden}
+.opt .lt{position:relative;background:var(--k);color:var(--y);overflow:hidden}
+.opt .lt b{position:absolute;left:50%;top:50%;transform:translate(-50%,-47%);font:900 112px/1 var(--d);font-stretch:62%}
+.opt .bd{padding:10px 16px;display:flex;flex-direction:column;justify-content:center;gap:2px;font-size:22px;min-width:0}
+.opt .bd small{font:500 14px/1.3 var(--t)}
+.opt:disabled{box-shadow:none;border-style:dashed;opacity:.42}
+.opt[aria-pressed=true]{background:var(--k);color:var(--w);box-shadow:6px 6px 0 var(--c)}
+.opt[aria-pressed=true] .lt{background:var(--y);color:var(--k)}
+.row.bl{scroll-margin:0}
+.cur{scroll-margin:120px 0 30px}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 30px;margin-top:26px}
+.acts .bk{box-shadow:6px 6px 0 var(--c)}
+
+/* ───── результат ───── */
+.res{border-top:6px solid var(--k);margin-top:6px;padding:22px 0 40px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 30px;align-items:start;scroll-margin:120px 0 20px}
+.r7{display:grid;font:900 300px/1 var(--d);font-stretch:50%;margin:-36px 0 -40px;--sw:8px}
+.r7 span{grid-area:1/1}
+.r7 .i{color:var(--k);-webkit-text-stroke:2px var(--k)}
+.res h2{font:800 68px/.9 var(--d);font-stretch:58%;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.plus{display:inline-block;background:var(--c);color:var(--w);font:900 46px/1 var(--d);font-stretch:60%;padding:4px 14px 8px;transform:rotate(-5deg);box-shadow:5px 5px 0 var(--k)}
+.res .tx{margin-top:12px;font-size:19px}
+.skt{margin-top:16px;font:700 14px/1.2 var(--t)}
+.skt+.skills{margin-top:7px}
+.skills{list-style:none;margin-top:16px;max-width:520px;border-top:2px solid var(--k)}
+.skills li{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-bottom:2px solid var(--k);font-size:15.5px}
+.skills li b{font-weight:700}
+.res .tot{margin-top:16px;font:600 16px/1 var(--t);display:flex;align-items:baseline;gap:8px}
+.res .tot b{font:900 44px/1 var(--d);font-stretch:50%}
+.res .acts{margin-top:22px}
+.res .mo{display:flex;flex-wrap:wrap;gap:0 24px;margin-top:8px}
+.bt{font:500 14.5px/1.2 var(--t);padding:10px 2px;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.wipe .i{animation:ink 950ms var(--io) both}
+.wipe .plus{animation:stamp 260ms var(--e) 820ms both}
+@keyframes ink{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes stamp{from{opacity:0;transform:rotate(-5deg) scale(1.25)}to{opacity:1;transform:rotate(-5deg) scale(1)}}
+
+/* ───── окна ───── */
+.back{position:fixed;inset:0;z-index:95;background:rgba(10,10,10,.78);display:grid;place-items:center;padding:20px;overflow:auto}
+.pan{position:relative;background:var(--w);border:4px solid var(--k);box-shadow:10px 10px 0 var(--c);width:min(480px,100%);padding:24px 24px 16px;max-height:calc(100svh - 40px);overflow:auto}
+.pan h2{font:800 40px/1 var(--d);font-stretch:58%;margin-bottom:12px}
+.pan .x{display:block;margin:8px 0 0 auto}
+.back.in{animation:fade 200ms linear both}
+.back.in .pan{animation:rise 320ms var(--e) both}
+@keyframes fade{from{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(22px) scale(.985)}}
+.hi{display:block;width:100%;text-align:left;border:3px solid var(--k);background:var(--w);padding:10px 16px 12px;margin-top:10px;min-height:64px}
+.hi b{display:block;font:700 18px/1.3 var(--t)}
+.hi small{font:500 14px/1.3 var(--t)}
+.hi.first{background:var(--k);color:var(--w)}
+.pan .nt{margin-top:14px;font-size:14.5px}
+.pan #own{display:block;width:calc(100% - 5px);margin:14px 0 18px}
+.pan .acts{margin-top:0}
+.pan .sl{display:block;font:500 14px/1.35 var(--t)}
+#ownsol{display:block;width:100%;margin:7px 0 18px;font:500 15px/1.4 var(--t);color:var(--k);background:var(--w);border:2px solid var(--k);border-radius:0;padding:9px 12px;resize:vertical;min-height:74px;-webkit-appearance:none;appearance:none}
+#ownsol::placeholder{color:#5b5b5b;opacity:1}
+#ownsol:focus-visible{outline:3px solid var(--c);outline-offset:2px}
+.pan.own #own{margin-bottom:14px}
+/* меню */
+.mh{font:700 14px/1.2 var(--t);margin-top:2px}
+.hl{margin-top:7px;border-top:2px solid var(--k)}
+.hs{display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:2px 12px;width:100%;min-height:62px;text-align:left;padding:8px 0 9px;border-bottom:2px solid var(--k)}
+.hs .hn{grid-row:1/3;font:900 44px/.8 var(--d);font-stretch:50%}
+.hs .hf{font-size:18px;min-width:0;overflow:hidden;padding:2px 0}
+.hs .hw{font:500 13px/1.2 var(--t);white-space:nowrap}
+.hs .ht{grid-column:2/4;font:500 13.5px/1.2 var(--t)}
+.ml{margin-top:14px}
+.mi{display:block;width:100%;text-align:left;padding:7px 0;min-height:48px}
+.mi b{display:block;font:700 15.5px/1.3 var(--t)}
+.mi small{display:block;font:500 13.5px/1.3 var(--t)}
+.mi.q b{font-weight:500;font-size:14.5px}
+.pan.menu .x{margin-top:0}
+.pan .acts .bk{box-shadow:none}
+
+/* окно баллов — плакат */
+.pan.pts{background:var(--y);width:min(1160px,100%);box-shadow:12px 12px 0 var(--w);padding:22px 34px 18px}
+.pts-h{display:flex;align-items:center;gap:14px}
+.pts-h h2{margin:0;font-size:44px}
+.pts-h .x{margin:0 0 0 auto}
+.pts-g{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 34px;align-items:end;margin-top:6px}
+.tot-n{position:relative;font:900 400px/1 var(--d);font-stretch:50%;margin:-52px 0 -50px -8px;letter-spacing:-.03em}
+.tot-n .of{position:absolute;right:-18px;top:27%;font-size:17px;padding:7px 10px 8px;border-width:3px;box-shadow:4px 4px 0 var(--k);letter-spacing:0;transform:rotate(6deg)}
+.poster{container-type:inline-size;padding-bottom:6px}
+.pl{display:flex;flex-wrap:wrap;align-items:flex-end;--u:calc(100cqw / 17);gap:calc(var(--u) * .34) calc(var(--u) * .3);margin-top:calc(var(--u) * .42)}
+.pl.one{gap:calc(var(--u) * .2) calc(var(--u) * .52)}
+.num{position:relative;display:inline-flex;flex-direction:column;font:900 calc(var(--u) * var(--m))/.76 var(--d);font-stretch:50%}
+.num i{font-style:normal;display:block}
+.num::after{content:'';display:block;height:max(5px,.085em);margin-top:max(4px,.07em);background:transparent}
+.num.help::after{background:var(--c)}
+.num.started{--sw:max(4px,.07em)}
+.num.started::before{content:'';position:absolute;right:-.12em;top:-.04em;width:max(8px,.13em);height:max(8px,.13em);background:var(--k);transform:rotate(45deg)}
+.num.none{--sw:2px}
+.nxt{background:var(--k);color:var(--w);font:600 18px/1.3 var(--t);padding:12px 16px 13px;transform:rotate(-1deg);flex:1 1 200px;align-self:center;margin-left:calc(var(--u) * .3)}
+.leg{display:flex;flex-wrap:nowrap;gap:6px 22px;margin-top:14px;font:600 13.5px/1 var(--t);align-items:flex-end;white-space:nowrap}
+.leg>span{display:inline-flex;align-items:flex-end;gap:7px}
+.leg .num{--u:26px;--m:1}
+.leg em{font-style:normal;padding-bottom:9px}
+.pts .note{margin-top:10px;font-size:14px;font-weight:400;max-width:46em}
+
+/* ───── широкий экран: гигантская семёрка в правом поле ───── */
+@media (min-width:1280px){
+  .g7{display:block}
+  .work .col{margin:0 0 0 clamp(40px,5vw,96px);width:min(1000px,100vw - clamp(40px,5vw,96px) - 420px)}
+  .top{padding-left:clamp(40px,5vw,96px)}
+  .res .r7{display:none}
+  .res{grid-template-columns:minmax(0,1fr)}
+}
+
+/* ───── телефон ───── */
+@media (max-width:820px){
+  body{font-size:16px}
+  .top{padding:10px 14px 4px}
+  .brand{font-size:26px}
+  .pbtn b{font-size:26px}
+  .hero-n{font-size:50vh;right:-5vw;bottom:-9vh}
+  .hero-n .of{font-size:15px;left:-1.6em;top:24%;padding:6px 9px 7px;box-shadow:4px 4px 0 var(--k)}
+  .hero-c{justify-content:flex-start;padding:10px 16px 40vh;max-width:none}
+  .kick{position:static;writing-mode:horizontal-tb;transform:none;font-size:30px;line-height:1;--sw:0px;color:var(--k);-webkit-text-stroke:0;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .kick .stk{position:static;transform:rotate(-4deg);font-size:12px}
+  .hero h1{font-size:min(11.6vw,56px);margin-bottom:14px}
+  .hero .lead{font-size:16.5px}
+  .recall{font-size:22px;margin-top:16px}
+  .hero .go{margin-top:26px}
+  .hero .more{margin-top:18px}
+  .col{width:100%;padding:0 12px}
+  .task-w{margin:0 -12px;padding:0 0 10px}
+  .task{min-height:72px}
+  .task .no{width:78px}
+  .task .no b{font-size:84px;top:16px;right:5px}
+  .task .no i{font-size:13px;left:6px;top:5px}
+  .task .f{font-size:24px;padding:7px 14px 8px;gap:2px}
+  .task .tp{font-size:12px}
+  .tr{gap:6px}
+  .mbtn{font-size:14px}
+  .rows{gap:22px;padding:10px 0 26px}
+  .rows.live{padding-bottom:70px}
+  .row{grid-template-columns:minmax(0,1fr);scroll-margin:100px 0 190px}
+  .mine{margin-right:8px;font-size:21px;min-height:60px;padding-left:14px}
+  .coach{margin:-6px 0 0 30px;padding:20px 22px 14px 16px;font-size:16px}
+  .row.solo .coach{grid-column:1;margin-top:0;padding-top:14px}
+  .dock{margin:0 -12px;padding:8px 12px 10px}
+  .prev{min-height:30px;font-size:18px}
+  .prev[data-empty]{display:none}
+  #inp{font-size:17px;padding:12px;box-shadow:4px 4px 0 var(--k);margin:0 4px 4px 0}
+  .line{gap:8px}
+  .line .bk{padding:10px 14px;font-size:16px;margin-bottom:4px}
+  .line .help{position:absolute;right:0;bottom:calc(100% + 8px);border-bottom:0;min-height:44px;padding:6px 14px 4px;font-size:15px}
+  .prev:not([data-empty]){padding-right:104px}
+  .syms{gap:5px;justify-content:space-between}
+  .syms button{flex:1;width:auto;min-width:44px}
+  .ask .q{font-size:28px;margin-bottom:14px}
+  .opts{gap:12px;margin-right:8px}
+  .opt{grid-template-columns:70px minmax(0,1fr);min-height:76px}
+  .opt .lt b{font-size:96px}
+  .opt .bd{font-size:20px;padding:8px 12px}
+  .row.bl .coach{margin-top:8px;padding-top:14px}
+  .cur{scroll-margin:96px 0 20px}
+  .acts{margin-top:20px}
+  .res{grid-template-columns:auto minmax(0,1fr);gap:0 14px;padding:16px 0 30px}
+  .r7{font-size:170px;margin:-22px 0 -24px;--sw:6px}
+  .res h2{font-size:50px;gap:12px;align-self:center}
+  .plus{font-size:34px}
+  .res .rb2{grid-column:1/-1}
+  .back{padding:0;place-items:end stretch}
+  .pan{width:100%;border-width:4px 0 0;box-shadow:none;padding:20px 16px 12px;max-height:92svh}
+  .back.in .pan{animation-name:sheet}
+  .pan.pts{width:100%;height:100svh;max-height:none;border:0;box-shadow:none;padding:12px 16px 20px}
+  .pts-h h2{font-size:34px}
+  .pts-g{grid-template-columns:minmax(0,1fr);margin-top:0}
+  .tot-n{font-size:210px;margin:-26px 0 -30px -4px;justify-self:start}
+  .tot-n .of{right:-64px;top:44%;font-size:15px}
+  .pl{--u:calc(100cqw / 10.3)}
+  .nxt{font-size:16px;margin:6px 0 0;flex-basis:100%}
+  .leg{gap:6px 11px;font-size:12px}
+  .leg>span{gap:4px}
+  .leg .num{--u:20px}
+  .leg em{padding-bottom:7px}
+}
+@keyframes sheet{from{transform:translateY(40px);opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .pop,.back.in .pan,.wipe .plus{animation:fade 160ms linear both}
+  .wipe .i{animation:fade 300ms linear both}
+  button{transition:none}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const {K, rich, SYMS} = Trenya;
+const app = document.getElementById('app');
+const btn = (a, cls) => a ? `<button class="${cls || ''}" data-act="${a.act}">${a.label}</button>` : '';
+const RE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7" fill="none" stroke="#0A0A0A" stroke-width="2.2"/><path d="M9.2 4.9h3.4V1.5z" fill="#0A0A0A"/></svg>';
+
+function header(S, T) {
+  return `<header class="top"><span class="brand">ЕГЭ-треня</span>
+    <div class="tr"><button class="mbtn" data-act="menu" aria-haspopup="dialog">${T.menu().label}</button>
+    <button class="pbtn" data-act="points" aria-haspopup="dialog" aria-label="Баллы: ${T.total()} из 32"><b>${T.total()}</b>из 32</button></div></header>`;
+}
+function heroNum(T) {
+  return `<div class="hero-n" aria-hidden="true">${T.total()}<span class="stk of">из 32</span></div><p class="sr">Всего ${T.total()} из 32</p>`;
+}
+function home(S, T) { const h = T.home();
+  return `<div class="pg hero">${header(S, T)}${heroNum(T)}
+    <main class="hero-c">
+      <p class="kick ol" style="--n:${h.kicker.length}"><span>${h.kicker}</span>${h.badge ? `<span class="stk">${h.badge}</span>` : ''}</p>
+      <h1>${h.title}</h1><p class="lead">${h.text}</p>
+      ${h.recall ? `<div class="recall">${K(h.recall)}</div>` : ''}
+      ${btn(h.primary, 'bk go')}
+      <div class="more">${btn(h.secondary, 'bq')}${btn(h.own, 'bq')}</div>
+    </main></div>`;
+}
+function bye(S, T) { const b = T.bye();
+  return `<div class="pg hero">${header(S, T)}${heroNum(T)}
+    <main class="hero-c"><h1>${b.title}</h1><p class="lead">${b.text}</p><p class="sub">${b.sub}</p>${btn(b.primary, 'bk go')}</main></div>`;
+}
+function giant(S, ev) { const got = !!S.scores[7];
+  return `<div class="g7 ${ev === 'win' ? 'wipe' : ''}" aria-hidden="true"><b>7</b>${got ? '<b class="i">7</b>' : ''}</div>`;
+}
+function task(t, T) {
+  return `<div class="task-w"><div class="task" data-task><div class="no" aria-hidden="true"><i aria-hidden="true">№</i><b aria-hidden="true">7</b></div><div class="f"><span class="tp">${T.topic}</span><span>${K(t.tex)}</span></div></div></div>`;
+}
+function blitz(S, ev, T) { const B = S.blitz, st = B.steps[B.i], L = ['А','Б','В'];
+  const past = B.steps.slice(0, B.end ? 3 : B.i).map(s => `<div class="row"><div class="mine"><div class="fx"><span>${K(s.opts[s.ok].tex)}</span></div></div><div class="coach">${rich(s.opts[s.ok].why)}</div></div>`).join('');
+  const pop = ev === 'pick-ok' || ev === 'pick-miss' || ev === 'blitz-end' ? 'pop' : '';
+  const cur = B.end
+    ? `<div class="cur" data-last><div class="row solo"><div></div><div class="coach ${pop}">${B.endText}</div></div><div class="acts">${btn(B.go, 'bk')}</div></div>`
+    : `<div class="cur" data-last><div class="row bl"><div class="ask"><p class="qn">Вопрос ${B.i+1} из 3</p><h2 class="q">${rich(st.q)}</h2>
+        <div class="opts">${st.opts.map((o, j) => { const off = B.tried[B.i].includes(j) || (B.ok && j !== st.ok), on = B.ok && j === st.ok;
+          return `<button class="opt" data-act="pick" data-i="${j}" ${off ? 'disabled' : ''} ${on ? 'aria-pressed="true"' : ''}><span class="lt" aria-hidden="true"><b>${L[j]}</b></span><span class="bd"><span>${K(o.tex)}</span>${o.t ? `<small>${o.t}</small>` : ''}</span></button>`; }).join('')}</div></div>
+        <div class="coach ${pop}" aria-live="polite">${B.note ? rich(B.note) : 'Выбери вариант. Ошибиться здесь нестрашно: баллы не меняются.'}</div></div>
+       <div class="acts">${B.ok ? btn(B.next, 'bk') : ''}${btn(B.skip, 'bq')}</div></div>`;
+  return `<div class="pg work">${giant(S, ev)}${header(S, T)}<main class="col">${task(B.task, T)}<div class="rows">${past}${cur}</div></main></div>`;
+}
+function work(S, ev, T) { const last = S.rows.length - 1, r = T.result();
+  const rows = S.rows.map((x, i) => { const isL = i === last, L = isL && !S.done ? 'data-last' : '';
+    if (x.type === 'line') { const re = x.mark === 'retry';
+      return `<div class="row" ${L}><div class="mine ${re ? 'retry' : ''} ${x.old ? 'old' : ''} ${isL && ev === 'sent' ? 'pop' : ''}">
+          ${re ? `<span class="tag-re">${RE}на доработке</span>` : ''}<div class="fx"><span>${K(x.tex)}</span></div>
+          ${isL && T.canUndo() ? '<button class="bq" data-act="undo">изменить</button>' : ''}</div>
+        <div class="coach ${isL && ev === 'reply' ? 'pop' : ''}" aria-live="polite">${x.note === null ? '<span class="wait">Тренер читает…</span>' : rich(x.note)}${re && isL ? '<button class="bw" data-act="hint">Подсказка</button>' : ''}</div></div>`; }
+    if (x.type === 'solution') return `<div class="row" ${L}><div class="mine"><div class="fx"><span>${K(x.tex)}</span></div></div><div class="coach">${rich(x.note)}</div></div>`;
+    return `<div class="row solo" ${L}><div></div><div class="coach ${isL && ev === 'aid' ? 'pop' : ''}">${x.label ? `<span class="lb">${x.label}</span>` : ''}${rich(x.note)}</div></div>`; }).join('');
+  let foot;
+  if (S.done) { const ink = !!S.scores[7];
+    foot = `<section class="res ${ev === 'win' ? 'wipe' : ''}" data-last>
+      <div class="r7" aria-hidden="true"><span class="ol">7</span>${ink ? '<span class="i">7</span>' : ''}</div>
+      <h2>${r.title}${r.plus ? `<span class="plus">${r.plus}</span>` : ''}</h2>
+      <div class="rb2"><p class="tx">${r.text}</p>
+        ${r.skills.length && r.skillsTitle ? `<p class="skt">${r.skillsTitle}</p>` : ''}
+        ${r.skills.length ? `<ul class="skills">${r.skills.map(s => `<li><b>${s.name}</b><span>${s.how}</span></li>`).join('')}</ul>` : ''}
+        <p class="tot">Всего <b>${r.total}</b> из 32</p>
+        <div class="acts">${btn(r.primary, 'bk')}${btn(r.secondary, 'bq')}</div>
+        ${r.more && r.more.length ? `<div class="mo">${r.more.map(a => btn(a, 'bt')).join('')}</div>` : ''}</div></section>`;
+  } else {
+    foot = `<div class="dock"><div class="comp"><div class="prev" data-prev></div>
+      <div class="line"><input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Следующая строка решения" aria-label="Следующая строка решения">
+        <button class="bk sm" data-act="send">Отправить</button><button class="bw help" data-act="help" aria-haspopup="dialog">Помощь</button></div>
+      <div class="syms">${SYMS.map(s => `<button data-sym="${s}" aria-label="вставить ${s}">${s}</button>`).join('')}</div></div></div>`;
+  }
+  return `<div class="pg work">${giant(S, ev)}${header(S, T)}<main class="col">${task(S.task, T)}<div class="rows ${S.done ? '' : 'live'}">${rows}</div>${foot}</main></div>`;
+}
+function panel(S, ev, T) {
+  if (!S.panel) return '';
+  const anim = ev === 'panel' ? 'in' : ''; let body = '', cls = '';
+  if (S.panel === 'points') { const p = T.points(); cls = 'pts';
+    const num = (x, extra) => `<span class="num ${x.state} ${x.state === 'started' || x.state === 'none' ? 'ol' : ''}" style="--m:${x.max}" ${extra}><i>${x.n}</i></span>`;
+    const item = x => num(x, `role="img" aria-label="№${x.n}: ${p.legend[x.state]}, максимум ${x.max}" title="№${x.n}: ${p.legend[x.state]}, максимум ${x.max}"`);
+    body = `<div class="pts-h"><h2>${p.title}</h2><span class="stk">${p.badge}</span><button class="bw x" data-act="close">Закрыть</button></div>
+      <div class="pts-g">
+        <div class="tot-n"><span aria-hidden="true">${p.total}</span><span class="stk of" aria-hidden="true">из ${p.max}</span><span class="sr">Всего ${p.total} из ${p.max}</span></div>
+        <div class="poster">
+          <div class="pl one">${p.items.filter(x => x.part === 1).map(item).join('')}</div>
+          <div class="pl">${p.items.filter(x => x.part === 2).map(item).join('')}${p.next ? `<p class="nxt">${p.next.text}</p>` : ''}</div>
+        </div>
+      </div>
+      <p class="leg">${['self','help','started','none'].map(s => `<span>${num({n:7, max:1, state:s}, 'aria-hidden="true"')}<em>${p.legend[s]}</em></span>`).join('')}</p>
+      <p class="note">${p.note}</p>`; }
+  if (S.panel === 'help') body = `<h2>Помощь</h2>${T.helpItems().map((h, i) => `<button class="hi ${i ? '' : 'first'}" data-act="${h.act}"><b>${h.label}</b><small>${h.sub}</small></button>`).join('')}
+    <p class="nt">${T.helpNote}</p><button class="bq x" data-act="close">Закрыть</button>`;
+  if (S.panel === 'menu') { const m = T.menu(); cls = 'menu';
+    body = `<h2>${m.title}</h2><p class="mh">${m.historyTitle}</p>
+      ${m.history.length ? `<div class="hl">${m.history.map((h, i) => `<button class="hs" data-act="hist" data-i="${i}"><span class="hn" aria-hidden="true">${h.n}</span><span class="sr">№${h.n}</span><span class="hf">${K(h.tex)}</span><span class="hw">${h.when}</span><span class="ht">${h.status}</span></button>`).join('')}</div>` : `<p class="nt">${m.empty}</p>`}
+      <div class="ml">${m.items.map(x => `<button class="mi ${x.act === 'logout' ? 'q' : ''}" data-act="${x.act}"><b>${x.label}</b>${x.sub ? `<small>${x.sub}</small>` : ''}</button>`).join('')}</div>
+      <button class="bq x" data-act="close">Закрыть</button>`; }
+  if (S.panel === 'own') { const o = T.ownPanel; cls = 'own';
+    body = `<h2>${o.title}</h2><p>${o.text}</p><input id="own" autocomplete="off" placeholder="${o.placeholder}" aria-label="${o.title}">
+      <label class="sl" for="ownsol">${o.solLabel}</label><textarea id="ownsol" rows="3" placeholder="${o.solPlaceholder}"></textarea>
+      <div class="acts"><button class="bk sm" data-act="own-send">${o.send}</button><button class="bq" data-act="photo">${o.photo}</button></div><button class="bq x" data-act="close">Закрыть</button>`; }
+  return `<div class="back ${anim}" data-panel-backdrop><div class="pan ${cls}" data-panel-root role="dialog" aria-modal="true">${body}</div></div>`;
+}
+
+Trenya.create((S, ev, T) => {
+  const scr = S.screen === 'home' ? home(S, T) : S.screen === 'blitz' ? blitz(S, ev, T) : S.screen === 'bye' ? bye(S, T) : work(S, ev, T);
+  app.innerHTML = scr + panel(S, ev, T);
+}, {id: '07-cifra'});
+</script>
+</body>
+</html>

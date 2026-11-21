@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ЕГЭ-треня · эксперимент «Свой вид баллов»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=Unbounded:wght@500;800;900&display=swap">
+<script src="core.js"></script>
+<style>
+:root{--ink:#16130f;--paper:#f6f0e2;--white:#fffaf0;--y:#ffc61a;--red:#d6321a;--mute:#57524a;--ease:cubic-bezier(.23,1,.32,1)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 'Onest',system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button{transition:transform 130ms var(--ease)}
+button:active{transform:scale(.97)}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+.top{display:flex;align-items:center;gap:14px;padding:16px 16px 6px;max-width:992px;margin:0 auto}
+.logo{font:800 19px/1 'Unbounded',sans-serif;letter-spacing:-.01em}
+.mark{font:800 12px/1 'Onest',sans-serif;letter-spacing:.06em;text-transform:uppercase;background:var(--y);border:2px solid var(--ink);padding:6px 9px;transform:rotate(-3deg);box-shadow:3px 3px 0 var(--ink)}
+main{max-width:992px;margin:0 auto;padding:10px 16px 44px}
+
+.score{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 26px;margin-top:10px}
+.score h1{font:500 17px/1.2 'Unbounded',sans-serif;margin:0;flex-basis:100%}
+.sum{display:flex;align-items:baseline;gap:10px;transform:rotate(-2deg);transform-origin:left bottom}
+.sum b{font:900 76px/.95 'Unbounded',sans-serif;letter-spacing:-.04em}
+.sum span{font:500 20px/1 'Unbounded',sans-serif}
+.next{margin:0 0 6px;font-weight:600;font-size:17px;max-width:30em}
+
+.slot{margin:22px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.cta{position:relative;min-height:54px;padding:12px 24px;background:var(--red);color:#fff;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);font:500 16px/1.2 'Unbounded',sans-serif;margin-right:14px}
+.cta .stk{position:absolute;right:-16px;top:-15px;font:800 11px/1 'Onest',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);background:var(--y);border:2px solid var(--ink);padding:4px 6px;transform:rotate(6deg)}
+.ctah{color:var(--mute);font-size:15px;max-width:26em}
+.quiet{min-height:44px;min-width:44px;padding:0 10px;background:none;border:0;font-weight:600;font-size:15px;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.tag{display:inline-flex;flex-direction:column;background:var(--white);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:7px 14px 9px;transform:rotate(-1.2deg);font-weight:600;font-size:17px;max-width:100%;overflow-wrap:anywhere}
+.tag small{font:800 11px/1.5 'Onest',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.wbb{display:flex;flex-wrap:wrap;gap:0 6px}
+
+.comp{margin-top:22px;background:var(--white);border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink);padding:18px;margin-right:8px;animation:in 220ms var(--ease) both}
+.comp label{display:block;font:500 16px/1.3 'Unbounded',sans-serif;margin-bottom:10px}
+.comp input{display:block;width:100%;min-height:50px;font:inherit;font-size:17px;color:var(--ink);background:#fff;border:3px solid var(--ink);border-radius:0;padding:10px 12px}
+.comp input::placeholder{color:#6b665d}
+.miss{margin:12px 0 0;background:var(--y);border:2px solid var(--ink);padding:9px 12px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.chip{min-height:44px;padding:0 14px;background:var(--paper);border:2px solid var(--ink);border-radius:999px;font-weight:600;font-size:15px}
+.chip[aria-pressed=true]{background:var(--y);box-shadow:3px 3px 0 var(--ink)}
+.crow{display:flex;align-items:center;gap:10px;margin-top:12px}
+.go{min-height:50px;padding:0 26px;background:var(--ink);color:var(--white);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--red);font:500 15px/1 'Unbounded',sans-serif}
+
+.bld{font-size:17px;min-height:54px}
+.bld b{font:500 16px/1 'Unbounded',sans-serif}
+.bld .q{color:var(--mute);overflow-wrap:anywhere}
+.dots{display:inline-flex;gap:6px}
+.dots i{width:12px;height:12px;background:var(--ink);animation:dot 1.2s ease-in-out infinite}
+.dots i:nth-child(2){animation-delay:.18s;background:var(--red)}
+.dots i:nth-child(3){animation-delay:.36s;background:var(--y);outline:2px solid var(--ink);outline-offset:-2px}
+@keyframes dot{0%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-5px)}}
+
+.stage{margin:26px 0 14px}
+.view svg{display:block;width:100%;height:auto;overflow:visible}
+.view.enter{animation:in 240ms var(--ease) both}
+.view.dim{animation:dim 200ms var(--ease) both}
+@keyframes in{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes dim{from{opacity:1}to{opacity:.2}}
+.nm{font-family:'Onest',system-ui,sans-serif;font-weight:800}
+.cp{font-family:'Onest',system-ui,sans-serif;font-weight:600}
+.ub{font-family:'Unbounded','Onest',sans-serif;font-weight:900}
+
+.legend{display:flex;flex-wrap:nowrap;gap:16px;margin:0;padding:0;list-style:none;font-size:14px;font-weight:600;white-space:nowrap}
+.legend li{display:flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.note{color:var(--mute);font-size:14px;margin:10px 0 0}
+footer{margin-top:34px;padding-top:14px;border-top:2px solid var(--ink);color:var(--mute);font-size:13px;max-width:46em}
+
+@media(max-width:899px){
+  .sum b{font-size:60px}
+  .next{font-size:16px}
+  .cta{width:calc(100% - 20px)}
+  .legend{gap:9px;font-size:12px}
+  .legend li{gap:4px}
+  .comp{padding:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <pattern id="hatY" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#ffc61a"/><rect width="2.6" height="7" fill="#16130f"/></pattern>
+  <pattern id="hatD" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#16130f"/><rect width="2.8" height="7" fill="#ffc61a"/></pattern>
+  <pattern id="hatP" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#f6f0e2"/><rect width="2.6" height="7" fill="#16130f"/></pattern>
+</defs></svg>
+<div id="app"></div>
+<div id="live" class="vh" role="status" aria-live="polite"></div>
+<script>
+/* Эксперимент «Свой вид баллов». Данные — только из ядра: T.points(). */
+const INK='#16130f', PAPER='#f6f0e2', WHITE='#fffaf0', Y='#ffc61a', RED='#d6321a', GR='#7a7469', MUTE='#57524a';
+const app = document.getElementById('app'), live = document.getElementById('live');
+const KEY = 'trenya-lab-view';
+const f1 = v => Math.round(v * 10) / 10;
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const solved = s => s === 'self' || s === 'help';
+
+/* четыре состояния: заливка / штриховка / пунктир / контур — на светлом и на тёмном фоне */
+const L = { self:{f:Y,s:INK,w:3,t:INK}, help:{f:'url(#hatY)',s:INK,w:3,t:INK,halo:Y}, started:{f:PAPER,s:INK,w:2.5,d:'6 5',t:INK}, none:{f:PAPER,s:GR,w:1.5,t:MUTE} };
+const D = { self:{f:Y,s:Y,w:2,t:INK}, help:{f:'url(#hatD)',s:Y,w:2.5,t:WHITE,halo:INK}, started:{f:INK,s:WHITE,w:2.5,d:'5 4',t:WHITE}, none:{f:INK,s:'#8d8d8d',w:1.5,t:'#d6d2c8'} };
+const at = q => `fill="${q.f}" stroke="${q.s}" stroke-width="${q.w}"${q.d ? ` stroke-dasharray="${q.d}"` : ''}`;
+const num = (x, y, n, size, q) => (q.halo ? `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(size * .72)}" fill="${q.halo}"/>` : '') + `<text x="${f1(x)}" y="${f1(y)}" dy=".35em" text-anchor="middle" font-size="${size}" class="nm" fill="${q.t}">${n}</text>`;
+const tip = (x, p) => `<title>№${x.n}: ${p.legend[x.state]}, максимум ${x.max}</title>`;
+
+/* ───── обычный вид: ряд клеток ───── */
+function base(p, m) {
+  const W = m ? 358 : 960, u = m ? 24 : 25, g = 4, h = 46; let x = 2, y = 2, out = '';
+  p.items.forEach(it => { const w = it.max * u + (it.max - 1) * g; if (x + w > W - 2) { x = 2; y += h + g + 4; }
+    const q = L[it.state];
+    out += `<g data-n="${it.n}">${tip(it, p)}<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" ${at(q)}/>${num(x + w / 2, y + h / 2, it.n, 15, q)}</g>`; x += w + g; });
+  return { W, H: y + h + 2, body: out };
+}
+
+/* ───── пластинка: две стороны, дорожка = задание, толщина = максимум ───── */
+function vinyl(p, m) {
+  const R = m ? 165 : 195, u = m ? 5 : 6, r0 = m ? 40 : 46, rim = 7, br = m ? 12 : 13, W = m ? 358 : 960, cap = 36;
+  const H = m ? 2 * (2 * R + 8 + cap) + 16 : 2 * R + 8 + cap + 6;
+  const cs = m ? [[R + 6, R + 4], [R + 6, 3 * R + 4 + 8 + cap + 16]] : [[W / 2 - 234, R + 4], [W / 2 + 226, R + 4]];
+  const sides = [['А', p.part1, 'задания 1–12', 1], ['Б', p.part2, 'задания 13–19', 2]];
+  let out = '';
+  sides.forEach(([name, part, range, pn], si) => { const [cx, cy] = cs[si], items = p.items.filter(x => x.part === pn);
+    const band = R - rim - r0, sum = items.reduce((a, x) => a + x.max, 0), g = (band - sum * u) / items.length;
+    let cur = R - rim, th = -2.45, rings = '', beads = '';
+    items.forEach(it => { const t = it.max * u, rm = cur - t / 2, s = it.state, C = `cx="${cx}" cy="${cy}" fill="none"`;
+      if (s === 'self') rings += `<circle ${C} r="${f1(rm)}" stroke="${Y}" stroke-width="${t}"/>`;
+      else if (s === 'help') rings += `<circle ${C} r="${f1(rm)}" stroke="${Y}" stroke-width="${t}" stroke-dasharray="3 3.4"/>`;
+      else { const e = s === 'started' ? `stroke="${WHITE}" stroke-width="1.6" stroke-dasharray="7 6"` : `stroke="#77736b" stroke-width="1"`;
+        rings += `<circle ${C} r="${f1(rm + t / 2 - .8)}" ${e}/><circle ${C} r="${f1(rm - t / 2 + .8)}" ${e}/>`; }
+      const bx = cx + rm * Math.cos(th), by = cy + rm * Math.sin(th), q = D[s], bq = s === 'self' ? {...q, s:INK} : q;
+      beads += `<g data-n="${it.n}">${tip(it, p)}<circle cx="${f1(bx)}" cy="${f1(by)}" r="${br}" ${at(bq)}/>${num(bx, by, it.n, m ? 13 : 14, q)}</g>`;
+      th += (2 * br + 4) / rm; cur -= t + g; });
+    out += `<circle cx="${cx + 8}" cy="${cy + 8}" r="${R}" fill="${RED}"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="${INK}"/>${rings}` +
+      `<circle cx="${cx}" cy="${cy}" r="${r0 - 8}" fill="${RED}" stroke="${WHITE}" stroke-width="2"/><text x="${cx}" y="${cy - 13}" dy=".35em" text-anchor="middle" font-size="15" class="ub" fill="#fff">${name}</text><circle cx="${cx}" cy="${cy + 4}" r="4" fill="${WHITE}"/>` +
+      beads + `<text x="${cx}" y="${cy + R + 8 + 22}" text-anchor="middle" font-size="15" class="cp" fill="${INK}">Сторона ${name} · ${range} · ${part.got} из ${part.max}</text>`; });
+  return { W, H, body: out };
+}
+
+/* ───── маршрут в гору: серпантин из 19 точек к вершине «32» ───── */
+function route(p, m) {
+  const W = m ? 358 : 960, rh = m ? 80 : 84, px = m ? 50 : 118, cx = W / 2, k = px / 50, pk = m ? 78 : 92, fl = m ? 48 : 52;
+  const H = 46 + 4 * rh + pk + fl + 8, y1 = H - 46, Yr = r => y1 - r * rh, peak = Yr(4) - pk;
+  const rad = mx => (m ? 11 : 14) + mx * (m ? 3 : 3.8);
+  const pts = []; let i = 0;
+  [6, 5, 4, 3, 1].forEach((c, r) => { for (let j = 0; j < c; j++) { const jj = r % 2 ? c - 1 - j : j, it = p.items[i++];
+    pts.push({ it, x: cx + (jj - (c - 1) / 2) * px, y: Yr(r) + (c > 1 ? (jj % 2 ? -5 : 5) : 0), r: rad(it.max) }); } });
+  const left = [[-166, H - 10], [-158, Yr(0) - 34], [-136, Yr(1) + 8], [-124, Yr(1) - 30], [-108, Yr(2) + 4], [-98, Yr(2) - 34], [-84, Yr(3) + 6], [-70, Yr(3) - 36], [-44, Yr(4) + 4], [-30, Yr(4) - 38]];
+  const right = [[30, Yr(4) - 30], [48, Yr(4) + 10], [72, Yr(3) - 30], [86, Yr(3) + 12], [100, Yr(2) - 28], [110, Yr(2) + 10], [126, Yr(1) - 24], [138, Yr(1) + 14], [160, Yr(0) - 28], [166, H - 10]];
+  const poly = [...left, [0, peak], ...right].map(([dx, y]) => [cx + dx * k, y]);
+  const P = (a, ox = 0, oy = 0) => a.map(([x, y]) => f1(x + ox) + ',' + f1(y + oy)).join(' ');
+  const lp = left[left.length - 1], rp = right[0], mix = (a, t) => [cx + a[0] * k * t, peak + (a[1] - peak) * t];
+  const sl = mix(lp, .62), sr = mix(rp, .62), zig = [0.25, 0.5, 0.75].map((t, n) => [sr[0] + (sl[0] - sr[0]) * t, sr[1] + (sl[1] - sr[1]) * t + (n % 2 ? 9 : -9)]);
+  let out = `<polygon points="${P(poly, 8, 6)}" fill="${INK}"/><polygon points="${P(poly)}" fill="#ece3cf" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>` +
+    `<polygon points="${P([sl, [cx, peak], sr, ...zig])}" fill="${WHITE}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`;
+  const seg = (a, b, on) => `<line x1="${f1(a.x)}" y1="${f1(a.y)}" x2="${f1(b.x)}" y2="${f1(b.y)}" stroke="${INK}" ${on ? 'stroke-width="5"' : 'stroke-width="2.5" stroke-dasharray="3 7" stroke-linecap="round"'}/>`;
+  for (let j = 0; j < 18; j++) out += seg(pts[j], pts[j + 1], solved(pts[j].it.state) && solved(pts[j + 1].it.state));
+  out += seg(pts[18], { x: cx, y: peak }, p.total === p.max);
+  const fy = peak - fl;
+  out += `<line x1="${cx}" y1="${peak}" x2="${cx}" y2="${fy}" stroke="${INK}" stroke-width="4"/><polygon points="${cx},${fy} ${cx + 60},${fy + 5} ${cx + 60},${fy + 33} ${cx},${fy + 30}" fill="${RED}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>` +
+    `<text x="${cx + 30}" y="${fy + 17}" dy=".35em" text-anchor="middle" font-size="17" class="ub" fill="#fff">32</text>`;
+  pts.forEach(o => { const q = L[o.it.state];
+    out += `<g data-n="${o.it.n}">${tip(o.it, p)}<circle cx="${f1(o.x)}" cy="${f1(o.y)}" r="${f1(o.r)}" ${at(q)}/>${num(o.x, o.y, o.it.n, m ? 13 + o.it.max : 14 + o.it.max * 2, q)}</g>`;
+    if (p.next && p.next.n === o.it.n) out += `<polygon points="${f1(o.x - 8)},${f1(o.y - o.r - 19)} ${f1(o.x + 8)},${f1(o.y - o.r - 19)} ${f1(o.x)},${f1(o.y - o.r - 5)}" fill="${RED}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`; });
+  return { W, H, body: out };
+}
+
+/* ───── город: 19 домов, этажей = максимум, в решённых горят окна ───── */
+function city(p, m) {
+  const W = m ? 358 : 960, un = m ? 50 : 56;
+  const rows = m ? [p.items.slice(0, 12), p.items.slice(12)] : [p.items];
+  const cfg = m ? [{ pitch: 29.2, bw: 24, x0: 5 }, { pitch: 50, bw: 42, x0: 5 }] : [{ pitch: 50, bw: 40, x0: 6 }];
+  const B = { self:{f:INK,s:INK,w:3}, help:{f:'url(#hatP)',s:INK,w:3}, started:{f:PAPER,s:INK,w:2.5,d:'6 5'}, none:{f:PAPER,s:GR,w:1.5} };
+  let out = '', top = 2;
+  rows.forEach((row, ri) => { const c = cfg[ri], mx = Math.max(...row.map(x => x.max)), base = top + 30 + mx * un;
+    const moon = m ? (ri ? [34, top + 34, 19] : null) : [112, top + 66, 32];
+    if (moon) out += `<circle cx="${moon[0] + 5}" cy="${moon[1] + 5}" r="${moon[2]}" fill="${INK}"/><circle cx="${moon[0]}" cy="${moon[1]}" r="${moon[2]}" fill="${Y}" stroke="${INK}" stroke-width="3"/>`;
+    row.forEach((it, i) => { const h = it.max * un, x = f1(c.x0 + i * c.pitch), y = base - h, bw = c.bw, q = B[it.state], s = it.state, a = at(q);
+      let b = `<rect x="${x}" y="${y}" width="${bw}" height="${h}" ${a}/>`;
+      const kind = it.n % 3;
+      if (kind === 0) b += `<rect x="${x + 4}" y="${y - 8}" width="${bw - 8}" height="8" ${a}/>`;
+      else if (kind === 1) b += `<polygon points="${x},${y} ${x + bw / 2},${y - 16} ${x + bw},${y}" ${a} stroke-linejoin="round"/>`;
+      else b += `<line x1="${x + bw / 2}" y1="${y}" x2="${x + bw / 2}" y2="${y - 19}" stroke="${q.s}" stroke-width="${q.w}"${q.d ? ' stroke-dasharray="4 3"' : ''}/><circle cx="${x + bw / 2}" cy="${y - 21}" r="3" fill="${s === 'none' ? PAPER : q.s}" stroke="${q.s}" stroke-width="1.5"/>`;
+      if (s !== 'none') { const ww = (bw - 14) / 2, wh = 18;
+        const wa = s === 'self' ? `fill="${Y}"` : s === 'help' ? `fill="${Y}" stroke="${INK}" stroke-width="2"` : `fill="none" stroke="${INK}" stroke-width="1.5" stroke-dasharray="3 3"`;
+        for (let f = 0; f < it.max; f++) for (let cI = 0; cI < 2; cI++) b += `<rect x="${f1(x + 5 + cI * (ww + 4))}" y="${base - (f + 1) * un + 14}" width="${f1(ww)}" height="${wh}" ${wa}/>`; }
+      out += `<g data-n="${it.n}">${tip(it, p)}${b}${num(x + bw / 2, base + 19, it.n, 14, { t: s === 'none' ? MUTE : INK })}</g>`; });
+    out += `<line x1="0" y1="${base}" x2="${W}" y2="${base}" stroke="${INK}" stroke-width="4"/>`;
+    top = base + 36; });
+  return { W, H: top, body: out };
+}
+
+/* ───── созвездие: 19 звёзд, размер = максимум, решённые соединены ───── */
+function stars(p, m) {
+  const W = m ? 358 : 960, H = m ? 580 : 440, PW = W - 8, PH = H - 8, padX = m ? 8 : 30, padT = m ? 12 : 18, padB = m ? 22 : 28;
+  const counts = m ? [4, 4, 4, 4, 3] : [7, 6, 6], ch = (PH - padT - padB) / counts.length;
+  const pts = []; let i = 0;
+  counts.forEach((c, r) => { const cw = (PW - 2 * padX) / c; for (let j = 0; j < c; j++) { const jj = r % 2 ? c - 1 - j : j, it = p.items[i++], n = it.n;
+    pts.push({ it, R: m ? 10 + 4.5 * it.max : 13 + 6 * it.max, x: padX + cw * (jj + .5) + Math.sin(n * 2.4) * cw * (m ? .1 : .2), y: padT + ch * (r + .4) + Math.cos(n * 1.7) * ch * (m ? .09 : .15) }); } });
+  let out = `<rect x="8" y="8" width="${PW}" height="${PH}" fill="${RED}"/><rect width="${PW}" height="${PH}" fill="${INK}"/>`;
+  for (let d = 0; d < 34; d++) out += `<circle cx="${f1((d * 97.3 + 13) % (PW - 8) + 4)}" cy="${f1((d * 57.7 + 29) % (PH - 8) + 4)}" r="1.3" fill="#77736b"/>`;
+  const line = pts.filter(o => solved(o.it.state));
+  if (line.length > 1) out += `<polyline points="${line.map(o => f1(o.x) + ',' + f1(o.y)).join(' ')}" fill="none" stroke="${Y}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  pts.forEach(o => { const q = D[o.it.state], rot = (o.it.n * 23 % 17 - 8) * Math.PI / 180;
+    const sp = Array.from({ length: 8 }, (_, a) => { const rr = a % 2 ? o.R * .42 : o.R, an = rot + a * Math.PI / 4 - Math.PI / 2; return f1(o.x + rr * Math.cos(an)) + ',' + f1(o.y + rr * Math.sin(an)); }).join(' ');
+    out += `<g data-n="${o.it.n}">${tip(o.it, p)}<polygon points="${sp}" ${at(q)} stroke-linejoin="round"/>${num(o.x, o.y + o.R + 17, o.it.n, 14, { t: o.it.state === 'none' ? '#d6d2c8' : solved(o.it.state) ? Y : WHITE })}</g>`; });
+  return { W, H, body: out };
+}
+
+/* ───── полка: 19 корешков, толщина = максимум ───── */
+function shelf(p, m) {
+  const W = m ? 358 : 960, u = 24, g = m ? 2 : 4, bh0 = m ? 96 : 150, bs = m ? 6 : 10, board = 14, block = bh0 + 4 * bs + 8 + board + (m ? 26 : 30);
+  const rows = m ? [p.items.slice(0, 12), p.items.slice(12, 16), p.items.slice(16)] : [p.items];
+  let out = '';
+  rows.forEach((row, ri) => { const base = ri * block + bh0 + 4 * bs + 8; let x = 14;
+    out += `<rect x="10" y="${base + 6}" width="${W - 16}" height="${board}" fill="${RED}"/><rect x="4" y="${base}" width="${W - 16}" height="${board}" fill="${INK}"/>`;
+    row.forEach(it => { const w = it.max * u + (it.max - 1) * g, h = bh0 + (it.n * 7 % 5) * bs, y = base - h - 1.5, q = L[it.state], s = it.state;
+      let b = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" ${at(q)}/>`;
+      if (s === 'self' || s === 'started') b += `<line x1="${x + 4}" y1="${y + 11}" x2="${x + w - 4}" y2="${y + 11}" stroke="${INK}" stroke-width="2"/><line x1="${x + 4}" y1="${y + 17}" x2="${x + w - 4}" y2="${y + 17}" stroke="${INK}" stroke-width="2"/>`;
+      if (solved(s)) { const lw = Math.min(w - 4, 30); b += `<rect x="${f1(x + w / 2 - lw / 2)}" y="${base - 38}" width="${lw}" height="23" fill="${WHITE}" stroke="${INK}" stroke-width="1.5"/>`; }
+      out += `<g data-n="${it.n}">${tip(it, p)}${b}${num(x + w / 2, base - 26.5, it.n, m ? 13 : 14, { t: s === 'none' ? MUTE : INK })}</g>`; x += w + g; });
+    if (x + 30 < W - 14) out += `<polygon points="${x + 3},${base} ${x + 3},${base - 54} ${x + 10},${base - 54} ${x + 10},${base - 9} ${x + 28},${base - 9} ${x + 28},${base}" fill="${INK}"/>`; });
+  return { W, H: rows.length * block + 2, body: out };
+}
+
+/* ───── плакат из цифр: размер цифры = максимум ───── */
+function poster(p, m) {
+  const W = m ? 358 : 960, sz = m ? [30, 46, 62, 78] : [42, 66, 90, 114];
+  const T = { self:{f:Y,s:INK,w:6}, help:{f:'url(#hatY)',s:INK,w:6}, started:{f:WHITE,s:INK,w:4.6,d:'5 4'}, none:{f:WHITE,s:GR,w:3.4} };
+  let out = `<rect class="pf" x="10" y="10" width="${W - 12}" height="100" fill="${RED}"/><rect class="pf" x="2" y="2" width="${W - 12}" height="100" fill="${WHITE}" stroke="${INK}" stroke-width="4"/>`;
+  p.items.forEach(it => { const s = sz[it.max - 1], q = T[it.state];
+    out += `<g data-n="${it.n}" data-s="${s}">${tip(it, p)}${solved(it.state) ? `<text x="4" y="4" font-size="${s}" class="ub" fill="${INK}" stroke="${INK}" stroke-width="6" stroke-linejoin="round">${it.n}</text>` : ''}<text class="ub fg" font-size="${s}" ${at(q)} stroke-linejoin="round" paint-order="stroke">${it.n}</text></g>`; });
+  const after = svg => { const lay = () => { if (!svg.isConnected) return;
+      const pad = m ? 18 : 30, gap = m ? 11 : 20, maxX = W - 12 - pad; let x = pad + 2, cur = [], rows = [];
+      svg.querySelectorAll('g[data-s]').forEach(gEl => { const w = gEl.querySelector('.fg').getComputedTextLength(), s = +gEl.dataset.s;
+        if (x + w > maxX && cur.length) { rows.push(cur); cur = []; x = pad + 2; } cur.push({ gEl, w, s, x }); x += w + gap; });
+      rows.push(cur); let y = pad + 2;
+      rows.forEach(r => { y += Math.max(...r.map(o => o.s)) * .74;
+        r.forEach((o, n) => o.gEl.setAttribute('transform', `translate(${f1(o.x)} ${f1(y)}) rotate(${n % 2 ? 2.5 : -2.5} ${f1(o.w / 2)} ${f1(-o.s * .35)})`)); y += m ? 18 : 26; });
+      const H = Math.round(y + pad - 10 + 12);
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H); svg.querySelectorAll('.pf').forEach(r => r.setAttribute('height', H - 12)); };
+    lay(); if (document.fonts && document.fonts.load) document.fonts.load('900 40px Unbounded', '0123456789').then(lay, () => {}); };
+  return { W, H: 120, body: out, after };
+}
+
+const VIEWS = { vinyl:{name:'пластинка', fn:vinyl}, route:{name:'маршрут в гору', fn:route}, city:{name:'город', fn:city}, stars:{name:'созвездие', fn:stars}, shelf:{name:'полка с книгами', fn:shelf}, poster:{name:'плакат из цифр', fn:poster} };
+const CHIPS = ['как пластинку', 'как маршрут в гору', 'как город из домов', 'как созвездие', 'как полку с книгами', 'как плакат из цифр'];
+/* подбор вида по словам запроса; «город» проверяется раньше «гор», «небоскрёб» — раньше «небо» */
+function match(q) { q = q.toLowerCase().replace(/ё/g, 'е');
+  if (/пластинк|винил|музык/.test(q)) return 'vinyl';
+  if (/город|дом|небоскр/.test(q)) return 'city';
+  if (/(^|[^а-я])гор[аыуе]?([^а-я]|$)|горн|горо[йю]|маршрут|пут[ьи]|скал|троп/.test(q)) return 'route';
+  if (/звезд|созвезд|космос|неб[оаеу]/.test(q)) return 'stars';
+  if (/книг|книж|полк|библиотек/.test(q)) return 'shelf';
+  if (/цифр|плакат|числ/.test(q)) return 'poster';
+  return null; }
+
+/* ───── состояние страницы ───── */
+const ui = { view:'base', query:'', mode:'idle', draft:'', miss:false, pending:null };
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && VIEWS[s.view]) { ui.view = s.view; ui.query = String(s.query || '').slice(0, 120); } } catch (e) {}
+const save = () => { try { if (ui.view === 'base') localStorage.removeItem(KEY); else localStorage.setItem(KEY, JSON.stringify({ view: ui.view, query: ui.query })); } catch (e) {} };
+let TT = null, wasM = null, timer = null;
+const isM = () => innerWidth < 900;
+
+function slot() {
+  if (ui.mode === 'compose') return `<div class="comp"><label for="wish">Опиши, как хочешь видеть свои баллы</label>
+    <input id="wish" type="text" autocomplete="off" maxlength="120" placeholder="Например: как маршрут в гору" value="${esc(ui.draft)}">
+    ${ui.miss ? '<p class="miss" role="status">В прототипе готовы шесть видов, выбери один из них</p>' : ''}
+    <div class="chips" role="group" aria-label="Готовые подсказки">${CHIPS.map(c => `<button type="button" class="chip" data-lab="chip" data-q="${c}" aria-pressed="${ui.draft === c}">${c}</button>`).join('')}</div>
+    <div class="crow"><button type="button" class="go" data-lab="build">Собрать</button><button type="button" class="quiet" data-lab="close">Закрыть</button></div></div>`;
+  if (ui.mode === 'building') return `<div class="slot bld"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><b>Собираю…</b><span class="q">«${esc(ui.pending.q)}»</span></div>`;
+  if (ui.view !== 'base') return `<div class="slot"><span class="tag"><small>Твой запрос</small>«${esc(ui.query)}»</span><span class="wbb"><button type="button" class="quiet" data-lab="open">Переделать</button><button type="button" class="quiet" data-lab="reset">Вернуть обычный</button></span></div>`;
+  return `<div class="slot"><button type="button" class="cta" data-lab="open">Собрать свой вид<span class="stk">эксперимент</span></button><span class="ctah">Опиши словами, как хочешь видеть баллы, и получишь свой вид.</span></div>`;
+}
+function paint(enter) {
+  if (!TT) return; const p = TT.points(), m = isM(); wasM = m;
+  const v = ui.view === 'base' ? base(p, m) : VIEWS[ui.view].fn(p, m);
+  const label = `${p.title}: ${p.total} из ${p.max}. ` + p.items.map(x => `№${x.n} — ${p.legend[x.state]}`).join(', ');
+  const sw = s => `<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="16" height="16" rx="3" ${at({...L[s], d: L[s].d ? '4 3' : ''})}/></svg>`;
+  app.innerHTML = `<header class="top"><span class="logo">ЕГЭ-треня</span><span class="mark">эксперимент</span></header>
+  <main>
+    <section class="score"><h1>${p.title}</h1><div class="sum"><b>${p.total}</b><span>из ${p.max}</span></div><p class="next">${p.next ? p.next.text : 'Все баллы собраны.'}</p></section>
+    ${slot()}
+    <div class="stage" data-view="${ui.view}"><div class="view${enter ? ' enter' : ''}${ui.mode === 'building' ? ' dim' : ''}" style="max-width:${m ? Math.round(v.W * 1.35) : v.W}px">
+      <svg viewBox="0 0 ${v.W} ${v.H}" width="${v.W}" height="${v.H}" role="img" aria-label="${esc(label)}">${v.body}</svg></div></div>
+    <ul class="legend" aria-label="Обозначения">${['self', 'help', 'started', 'none'].map(s => `<li>${sw(s)}${p.legend[s]}</li>`).join('')}</ul>
+    <p class="note">${p.note}</p>
+    <footer>Эксперимент. В прототипе вид подбирается из шести готовых по словам запроса. В продукте его собирал бы тренер по описанию — это ещё предстоит проверить.</footer>
+  </main>`;
+  if (v.after) v.after(app.querySelector('.view svg'));
+}
+const focusOn = sel => { const el = app.querySelector(sel); if (el) el.focus({ preventScroll: true }); };
+function build() { const inp = document.getElementById('wish'); if (!inp || ui.mode === 'building') return;
+  const q = inp.value.trim(), k = match(q); ui.draft = q;
+  if (!k) { ui.miss = true; paint(); focusOn('#wish'); return; }
+  ui.mode = 'building'; ui.pending = { k, q }; ui.miss = false; paint(); live.textContent = 'Собираю…';
+  clearTimeout(timer); timer = setTimeout(() => { ui.view = k; ui.query = q; ui.mode = 'idle'; ui.pending = null; save(); paint(true);
+    live.textContent = 'Собран вид: ' + VIEWS[k].name + '.'; focusOn('[data-lab="open"]'); }, 1200); }
+
+document.addEventListener('click', e => { const b = e.target.closest('[data-lab]'); if (!b) return; const a = b.dataset.lab;
+  if (a === 'open') { ui.mode = 'compose'; ui.miss = false; ui.draft = ui.query; paint(); if (!isM()) focusOn('#wish'); else focusOn('.comp .chip'); }
+  else if (a === 'chip') { const inp = document.getElementById('wish'); ui.draft = inp.value = b.dataset.q;
+    app.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c === b)); }
+  else if (a === 'build') build();
+  else if (a === 'close') { ui.mode = 'idle'; ui.miss = false; paint(); focusOn('[data-lab="open"]'); }
+  else if (a === 'reset') { ui.view = 'base'; ui.query = ''; ui.mode = 'idle'; save(); paint(true); live.textContent = 'Обычный вид возвращён.'; focusOn('[data-lab="open"]'); } });
+document.addEventListener('input', e => { if (e.target.id !== 'wish') return; ui.draft = e.target.value;
+  app.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c.dataset.q === ui.draft)); });
+document.addEventListener('keydown', e => { if (e.target.id === 'wish' && e.key === 'Enter') { e.preventDefault(); build(); }
+  else if (e.key === 'Escape' && ui.mode === 'compose') { ui.mode = 'idle'; ui.miss = false; paint(); focusOn('[data-lab="open"]'); } });
+addEventListener('resize', () => { if (isM() !== wasM && ui.mode !== 'compose') paint(); });
+
+/* ядро зовёт render при старте и при смене профиля; рисуем всегда окно баллов, что бы ни было в S.screen */
+Trenya.create((S, ev, T) => { TT = T; paint(); }, { id: 'lab' });
+</script>
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ЕГЭ-треня · Тетрадь</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Geologica:wght@400;500;600;700&family=Neucha&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="core.js"></script>
+<style>
+/* «Тетрадь»: тетрадь на пружине лежит на зелёном столе.
+   Клетка — поле ученика (синие чернила). Жёлтая полоса за красной линией — поле тренера (красная ручка). */
+:root{
+  --desk:#0B5E46; --deskd:#06392B; --cover:#FF6A1A; --paper:#FCFCF8; --grid:#D3DEF1;
+  --ink:#1A2E9E; --pen:#B5121B; --blk:#141414; --pad:#FFE566; --pencil:#575B63; --tape:#E6D49A; --help:#C2410C;
+  --ease:cubic-bezier(.23,1,.32,1);
+  --ui:'Geologica',system-ui,sans-serif; --disp:'Dela Gothic One','Geologica',sans-serif; --hand:'Neucha','Geologica',cursive;
+  --mw:372px; --tilt:-.7deg;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--desk);color:var(--blk);font:17px/1.45 var(--ui)}
+#app{min-height:100vh;overflow-x:clip;position:relative}
+h1,h2,p{margin:0}
+.katex{font-size:1em}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform 130ms var(--ease)}
+button:active{transform:scale(.97)}
+:focus-visible{outline:3px solid var(--blk);outline-offset:3px}
+.top :focus-visible{outline-color:#fff}
+
+/* ───── шапка: лента-этикетка и ценник с баллами ───── */
+.top{display:flex;justify-content:space-between;align-items:center;max-width:1180px;margin:0 auto;padding:14px 40px 6px}
+.dymo{background:var(--blk);color:#fff;font:700 17px/1 var(--ui);letter-spacing:.06em;padding:9px 16px 10px;border-radius:3px;rotate:-1.6deg;box-shadow:3px 3px 0 var(--deskd)}
+.tag{background:var(--pad);border:2.5px solid var(--blk);border-radius:999px;min-height:46px;padding:4px 18px 4px 14px;rotate:1.8deg;box-shadow:4px 4px 0 var(--blk);font:600 16px/1 var(--ui);display:flex;align-items:center;gap:7px}
+.tag b{font:400 22px/1 var(--disp)}
+.tr{display:flex;align-items:center;gap:16px}
+.mbtn{background:none;border:0;min-height:44px;min-width:44px;padding:8px 8px;font:500 15px/1 var(--ui);color:#DCEAE3;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+.tag.bump{animation:bump .5s var(--ease) .25s both}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+/* ───── кнопки ───── */
+.pri{background:var(--cover);border:3px solid var(--blk);border-radius:8px;min-height:58px;padding:12px 28px;font:700 20px/1.1 var(--ui);box-shadow:5px 5px 0 var(--blk)}
+.quiet{background:none;border:0;min-height:44px;min-width:44px;padding:8px 6px;font:500 16px/1.2 var(--ui);color:#3b3f47;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px}
+.badge{display:inline-block;background:var(--pad);border:2px solid var(--blk);border-radius:3px;font:600 12px/1 var(--ui);padding:4px 7px;rotate:-5deg;vertical-align:middle;margin-left:8px;position:relative;top:-2px}
+
+/* ───── закрытая тетрадь: главный экран и прощание ───── */
+.home{display:grid;place-items:center;padding:18px 20px 70px;position:relative}
+.nb{position:relative}
+.closed{width:min(600px,100%);rotate:-2.2deg}
+.closed.bye{rotate:1.8deg}
+.cover{position:relative;background:linear-gradient(90deg,var(--blk) 0 56px,var(--cover) 56px);border:3px solid var(--blk);border-radius:6px 18px 18px 6px;
+  padding:34px 34px 44px 88px;min-height:610px;box-shadow:7px 7px 0 var(--paper),7px 7px 0 2.5px var(--blk),19px 19px 0 var(--deskd)}
+.wordmark{font:400 62px/1 var(--disp);letter-spacing:-.01em;margin:6px 0 30px;white-space:nowrap}
+.label{background:var(--paper);border:3px solid var(--blk);border-radius:4px;padding:24px 28px 22px;rotate:1.5deg;margin-right:-84px;box-shadow:7px 7px 0 var(--blk)}
+.kick{font:600 16px/1.2 var(--ui);margin-bottom:10px}
+.label h1{font:400 40px/1.08 var(--disp);margin-bottom:14px}
+.label .txt{font-size:18px;max-width:34em}
+.label .sub{margin-top:8px;color:#3b3f47}
+.recall{color:var(--ink);font-size:29px;margin:16px 0 2px;padding-bottom:6px;border-bottom:2px solid var(--ink);display:inline-block}
+.label .pri{margin-top:22px;width:100%}
+.minor{display:flex;gap:6px 26px;flex-wrap:wrap;margin-top:12px}
+.spiral{position:absolute;left:-20px;top:20px;bottom:20px;width:56px;z-index:3;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='30'%3E%3Ccircle cx='42' cy='15' r='5.5' fill='%23141414'/%3E%3Crect x='5' y='9.5' width='40' height='11' rx='5.5' fill='none' stroke='%23141414' stroke-width='6.5'/%3E%3Crect x='5' y='9.5' width='40' height='11' rx='5.5' fill='none' stroke='%23D9DDE2' stroke-width='3'/%3E%3C/svg%3E") repeat-y}
+/* двухцветный карандаш на столе — только на широком экране */
+.pencil{position:absolute;left:calc(50% + 400px);top:150px;width:20px;height:400px;rotate:21deg;border:3px solid var(--blk);background:linear-gradient(var(--pen) 0 50%,var(--ink) 50%);box-shadow:8px 8px 0 var(--deskd)}
+.pencil::before,.pencil::after{content:'';position:absolute;left:-3px;width:20px;height:30px;background:#E9C48C}
+.pencil::before{bottom:calc(100% + 3px);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.pencil::after{top:calc(100% + 3px);clip-path:polygon(0 0,100% 0,50% 100%)}
+@media(max-width:1180px){.pencil{display:none}}
+
+/* ───── раскрытая тетрадь: разминка и решение ───── */
+.work{max-width:1180px;margin:0 auto;padding:0 40px 14px}
+.open{rotate:var(--tilt);margin:22px 16px 34px 26px}
+.open::before{content:'';position:absolute;inset:-8px -16px -17px -22px;background:var(--cover);border:3px solid var(--blk);border-radius:8px 14px 14px 8px;box-shadow:11px 11px 0 var(--deskd);rotate:.35deg}
+.page{position:relative;z-index:1;border:2.5px solid var(--blk);border-radius:3px 10px 10px 3px;min-height:calc(100vh - 300px);padding:20px 0 70px 64px;
+  background:linear-gradient(to left,var(--pad) 0 var(--mw),transparent var(--mw)),
+    linear-gradient(var(--grid) 1px,transparent 1px) 0 0/26px 26px,linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/26px 26px,var(--paper)}
+.page::before{content:'';position:absolute;top:0;bottom:0;right:var(--mw);width:7px;border-left:2px solid var(--pen);border-right:2px solid var(--pen)}
+.mhead{position:absolute;top:24px;right:0;width:var(--mw);padding-left:34px;font:400 26px/1 var(--hand);color:var(--pen)}
+.mhead span{border-bottom:2.5px solid var(--pen);padding-bottom:1px}
+
+/* условие: печатная полоска на малярном скотче */
+.slip{position:sticky;top:10px;z-index:5;width:calc(100% - var(--mw) - 40px);background:#fff;border:2.5px solid var(--blk);box-shadow:5px 5px 0 var(--blk);
+  display:flex;align-items:center;gap:18px;padding:13px 22px 13px 16px;margin-bottom:22px;rotate:-.5deg}
+.slip::before{content:'';position:absolute;left:-12px;right:-12px;bottom:100%;height:16px;background:var(--paper)}
+.slip .no{flex:none;background:var(--blk);color:#fff;font:400 17px/1 var(--disp);padding:8px 9px 9px}
+.slip .tf{min-width:0;display:flex;flex-direction:column;gap:3px}
+.slip .tp{font:600 13px/1.2 var(--ui);color:#4a4e57}
+.slip .f{font-size:31px;line-height:1.2;min-width:0}
+.tape{position:absolute;top:-13px;width:76px;height:25px;background:var(--tape);border-left:2px dotted #b7a56c;border-right:2px dotted #b7a56c}
+.tape.l{left:-22px;rotate:-33deg}.tape.r{right:-22px;rotate:31deg}
+
+.row{display:grid;grid-template-columns:minmax(0,1fr) var(--mw);align-items:start;padding:12px 0;scroll-margin:130px 0 215px}
+.mine{color:var(--ink);font-size:25px;line-height:1.35;padding-right:40px;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px}
+/* формула ученика лежит на ровной полоске бумаги, а не на клетке */
+.mine .ln{max-width:100%;overflow-x:auto;overflow-y:hidden;padding:3px 10px 4px;margin-left:-10px;background:var(--paper);border-radius:2px}
+.row.sol .mine{color:#23262c}
+.row.old .mine .ln{color:#6f779c}
+.redo{display:inline-flex;align-items:center;gap:6px;font:600 14px/1 var(--ui);color:#5d4300;background:#FFD98A;border:2px dashed #6b4e00;border-radius:3px;padding:5px 9px 6px}
+.redo svg{width:15px;height:15px}
+.row.old .redo{background:none;color:var(--pencil);border-color:#9a9da5}
+.coach{position:relative;font:400 23px/1.28 var(--hand);color:var(--pen);padding:3px 22px 0 34px;min-width:0}
+.coach::before{content:'';position:absolute;left:8px;top:17px;width:18px;border-top:2.5px solid var(--pen);rotate:-6deg}
+.coach .katex{font-size:.92em}
+.coach .who{display:none}
+.coach .lb{border-bottom:2px solid var(--pen)}
+.coach.wait{color:#6b5a16}
+.ctick{width:22px;height:22px;vertical-align:-3px;margin-right:4px}
+.coach .quiet{font:400 21px/1 var(--hand);color:var(--blk);display:block;margin-top:2px;padding-left:0;text-align:left}
+.in{animation:in .22s var(--ease) both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* разминка: объявление с отрывными листочками */
+.notice{flex:1 1 100%;max-width:640px;color:var(--blk);margin:6px 0 2px}
+.nhead{background:#fff;border:2.5px solid var(--blk);border-bottom:0;padding:16px 20px 16px;position:relative}
+.nhead::before{content:'';position:absolute;top:-12px;left:50%;margin-left:-40px;width:80px;height:24px;background:var(--tape);rotate:-2deg}
+.nhead small{display:block;font:600 14px/1 var(--ui);color:#4a4e57;margin-bottom:8px}
+.nhead .q{font:600 22px/1.25 var(--ui)}
+.strips{display:flex;align-items:stretch}
+.strip{position:relative;flex:1 1 0;min-width:0;background:#fff;border:2.5px solid var(--blk);border-top:2.5px dashed var(--blk);margin-left:-2.5px;border-radius:0;padding:18px 8px 46px;text-align:center;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.strip:first-child{margin-left:0}
+.strip .sf{display:inline-block;position:relative;font-size:22px;color:var(--ink);white-space:nowrap}
+.strip .st{display:block;font:500 14px/1.25 var(--ui);margin-top:10px;color:#30343b}
+.strip[disabled]{cursor:default;transform:none}
+.strip.off .sf,.strip.off .st,.strip.torn .sf,.strip.torn .st{color:#8b9099}
+.strip.torn{padding-bottom:10px;min-height:0;border-bottom:0;align-self:flex-start}
+.strip.torn::after{content:'';position:absolute;left:-2.5px;right:-2.5px;bottom:-10px;height:10px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10'%3E%3Cpath d='M0 0H16V3L8 9L0 3Z' fill='%23fff'/%3E%3Cpath d='M0 3L8 9L16 3' fill='none' stroke='%23141414' stroke-width='2.5'/%3E%3C/svg%3E") repeat-x}
+.strip.torn.now{animation:rip .2s var(--ease) both}
+@keyframes rip{from{transform:translateY(7px)}to{transform:none}}
+.strip.yes{background:#fff}
+.strip .loop{position:absolute;left:-16px;top:-7px;width:calc(100% + 32px);height:calc(100% + 14px);color:var(--ink);pointer-events:none}
+.strip.yes.now .loop{animation:in .22s var(--ease) both}
+.acts{grid-column:1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 26px;padding:14px 40px 0 0}
+
+/* итог */
+.res{width:calc(100% - var(--mw) - 40px);margin:18px 0 0;padding-top:20px;border-top:3px solid var(--blk);scroll-margin:130px 0 30px;position:relative}
+.res h2{font:400 44px/1 var(--disp);margin-bottom:12px}
+.res .txt{font-size:19px;max-width:30em;padding-right:180px}
+.big{position:absolute;right:10px;top:-6px;width:168px;height:168px;rotate:-11deg}
+.big.self{color:var(--ink)}.big.help{color:var(--help)}
+.big text{font-family:var(--disp);fill:currentColor}
+.thump{animation:thump .42s cubic-bezier(.2,.9,.3,1) .12s both}
+@keyframes thump{0%{opacity:0;transform:scale(2.6)}55%{opacity:1;transform:scale(.92)}75%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+.sktitle{font:600 15px/1.2 var(--ui);color:#3b3f47;margin:18px 0 0}
+.sktitle + .skills{margin-top:4px}
+.skills{list-style:none;padding:0;margin:16px 0 0;max-width:470px;font-size:16px}
+.skills li{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-bottom:1.5px solid var(--ink)}
+.skills em{font-style:normal;color:#3b3f47;text-align:right}
+.tot{margin-top:16px;font:600 17px/1 var(--ui)}
+.tot b{font:400 30px/1 var(--disp);margin:0 4px}
+.res .acts{padding:20px 0 0}
+.more{display:flex;flex-wrap:wrap;gap:0 22px;margin-top:6px}
+.more button{background:none;border:0;min-height:44px;min-width:44px;padding:8px 4px 8px 0;font:400 14.5px/1.2 var(--ui);color:var(--pencil);text-decoration:underline dotted;text-decoration-thickness:1.5px;text-underline-offset:4px}
+
+/* ───── строка ввода ───── */
+.composer{position:sticky;bottom:12px;z-index:6;margin:0 16px 0 26px;background:#fff;border:3px solid var(--blk);border-radius:6px;box-shadow:6px 6px 0 var(--blk);padding:8px 14px 12px}
+[data-prev]{min-height:32px;font-size:19px;color:var(--ink);overflow:hidden;white-space:nowrap}
+[data-prev] span{font:500 13px/1 var(--ui);color:#4a4e57;margin-right:4px}
+[data-prev][data-empty]{visibility:hidden}
+.cline{display:flex;gap:10px}
+#inp,#own{flex:1;min-width:0;font:500 20px/1.2 var(--ui);color:var(--ink);background:var(--paper);border:2.5px solid var(--blk);border-radius:4px;padding:10px 14px;min-height:52px}
+#inp::placeholder,#own::placeholder{color:#6a6f7a;font-weight:400}
+#inp:focus-visible,#own:focus-visible{outline:3px solid var(--ink);outline-offset:1px}
+.composer .pri{min-height:52px;padding:8px 24px;font-size:18px;box-shadow:3px 3px 0 var(--blk)}
+.ghost{background:#fff;border:2.5px solid var(--blk);border-radius:4px;min-height:44px;min-width:44px;padding:6px 14px;font:600 16px/1 var(--ui)}
+.csub{display:flex;gap:6px;margin-top:8px;align-items:center}
+.sym{background:var(--paper);border:1.5px solid var(--blk);border-radius:4px;width:46px;height:44px;padding:0;font:500 18px/1 var(--ui);color:var(--ink)}
+.csub .ghost{margin-left:auto}
+
+/* ───── окна ───── */
+.veil{position:fixed;inset:var(--bar,0px) 0 0 0;z-index:40;background:rgba(4,34,25,.86);display:grid;place-items:center;padding:20px;overflow:auto}
+.veil.on{animation:fade .2s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.veil.on [data-panel-root]{animation:drop .34s var(--ease) both}
+@keyframes drop{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
+.x{position:absolute;top:12px;right:12px}
+
+/* окно баллов: внутренняя сторона задней обложки */
+.board{position:relative;width:min(980px,100%);background:radial-gradient(circle at 27px 22px,var(--deskd) 0 7px,transparent 7.6px) 0 14px/54px 44px repeat-y,#EFECE2;
+  border:3px solid var(--blk);border-radius:6px 18px 18px 6px;padding:26px 34px 26px 72px;rotate:1deg;box-shadow:8px 8px 0 var(--cover),8px 8px 0 3px var(--blk),20px 20px 0 var(--blk);--s:64px}
+.board h2{font:400 30px/1 var(--disp)}
+.bsum{display:flex;align-items:center;gap:36px;margin:20px 0 22px}
+.sum{position:relative;display:grid;grid-template-columns:auto auto;align-items:baseline;gap:0 12px;padding:20px 46px 24px 42px;flex:none}
+.sum small{grid-column:1/-1;margin-bottom:6px}
+.sum small{font:600 15px/1 var(--ui)}
+.sum .num{font:400 78px/.9 var(--disp)}
+.sum .of{font:400 24px/1 var(--disp)}
+.sum .loop{position:absolute;inset:-4px -6px;width:calc(100% + 12px);height:calc(100% + 8px);color:var(--ink);pointer-events:none}
+.next{background:var(--pad);font:400 23px/1.25 var(--hand);color:var(--pen);padding:12px 18px 13px;rotate:-1.2deg;box-shadow:4px 4px 0 var(--blk);max-width:360px}
+.part{display:flex;flex-wrap:wrap;align-items:flex-end;margin:0 0 14px 2px}
+.cell{width:calc(var(--m) * var(--s));border:2px solid var(--ink);border-radius:255px 12px 225px 12px/12px 225px 12px 255px;margin:0 -2px -2px 0;position:relative;padding-top:20px}
+.cell:nth-child(even){border-radius:12px 225px 12px 255px/255px 12px 225px 12px}
+.cell .n{position:absolute;top:4px;left:8px;font:600 13px/1 var(--ui);color:var(--ink)}
+.slots{display:flex}
+.slot{width:var(--s);height:calc(var(--s) - 6px);display:grid;place-items:center;flex:none}
+.ring{width:22px;height:22px;border:2px dotted #8d92a3;border-radius:50%}
+.stamp{width:calc(var(--s) - 10px);height:calc(var(--s) - 10px)}
+.stamp.self{color:var(--ink)}.stamp.help{color:var(--help)}
+.stamp text{font-family:var(--disp);fill:currentColor}
+.tick{width:calc(var(--s) - 16px);height:calc(var(--s) - 16px);color:var(--pencil)}
+.pcap{font:400 21px/1 var(--hand);color:var(--ink);margin:0 0 10px 16px;white-space:nowrap}
+.legend{display:flex;gap:6px 22px;flex-wrap:nowrap;align-items:center;font:500 14px/1 var(--ui);margin-top:6px;white-space:nowrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{width:22px;height:22px;rotate:0deg!important}
+.legend .ring{width:16px;height:16px}
+.bnote{font-size:14px;color:#3b3f47;margin-top:12px;max-width:44em}
+
+/* помощь и своя задача: карточка */
+.card{position:relative;width:min(520px,100%);background:var(--paper);border:3px solid var(--blk);border-radius:6px;padding:26px 26px 22px;rotate:-.8deg;box-shadow:10px 10px 0 var(--blk)}
+.card h2{font:400 28px/1 var(--disp);margin-bottom:16px}
+.hitem{display:block;width:100%;text-align:left;background:#fff;border:2.5px solid var(--blk);border-radius:4px;padding:11px 16px 12px;margin-top:8px;min-height:60px}
+.hitem b{display:block;font:700 18px/1.2 var(--ui)}
+.hitem small{display:block;font:400 14px/1.3 var(--ui);color:#3b3f47;margin-top:2px}
+.hitem.last{border-style:dashed;background:none}
+.hnote{font:400 22px/1.2 var(--hand);color:var(--pen);background:var(--pad);padding:8px 14px 9px;margin-top:16px;display:inline-block;rotate:-1deg}
+.card .txt{margin-bottom:14px}
+.card #own{width:100%;display:block}
+.card .pri{margin-top:16px;width:100%}
+.card .acts{padding:6px 0 0;display:flex;justify-content:center}
+.card{max-height:calc(100vh - var(--bar,0px) - 44px);overflow-y:auto}
+/* своя задача: необязательное поле с готовым решением — тише главного */
+.sollab{display:block;font:400 14px/1.35 var(--ui);color:#4a4e57;margin:14px 0 6px}
+#ownsol{display:block;width:100%;resize:vertical;font:400 16px/1.35 var(--ui);color:var(--ink);background:var(--paper);border:1.5px dashed #6a6f7a;border-radius:4px;padding:8px 12px;min-height:76px}
+#ownsol::placeholder{color:#6a6f7a}
+#ownsol:focus-visible{outline:3px solid var(--ink);outline-offset:1px}
+/* меню: история и редкие действия */
+.mh{font:600 15px/1.2 var(--ui);color:#3b3f47;margin:0 0 4px}
+.mempty{font-size:15px;color:#4a4e57;padding:6px 0 4px}
+.hist{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:2px 12px;width:100%;text-align:left;background:#fff;border:0;border-bottom:1.5px solid var(--ink);padding:9px 10px 10px 8px;min-height:60px}
+.hist .hn{grid-row:1/3;background:var(--blk);color:#fff;font:400 13px/1 var(--disp);padding:6px 6px 7px}
+.hist .hf{font-size:19px;color:var(--ink);white-space:nowrap;overflow:hidden}
+.hist small{font:400 13.5px/1.25 var(--ui);color:#3b3f47}
+.hist small b{font-weight:600;margin-right:8px}
+.mitems{margin-top:18px}
+.mitem{display:block;width:100%;text-align:left;background:none;border:0;border-top:1.5px solid #c6c9d0;padding:9px 4px 10px;min-height:52px}
+.mitem b{display:block;font:600 16px/1.2 var(--ui)}
+.mitem small{display:block;font:400 13.5px/1.3 var(--ui);color:#4a4e57;margin-top:2px}
+.mitem.out{min-height:44px}
+.mitem.out b{font-weight:400;font-size:14.5px;color:var(--pencil)}
+
+@media(hover:hover) and (pointer:fine){
+  .pri:hover{transform:translate(-2px,-2px)}
+  .pri:active{transform:scale(.97)}
+  .tag:hover{transform:translateY(-2px)}
+  .hitem:hover,.ghost:hover,.sym:hover{background:var(--pad)}
+  .strip:not([disabled]):hover{background:#FFF6C4}
+  .quiet:hover{color:var(--blk)}
+  .mbtn:hover{color:#fff}
+  .more button:hover,.mitem.out:hover b{color:var(--blk)}
+  .hist:hover{background:#FFF6C4}
+  .mitem:hover{background:#F1F0E6}
+}
+
+/* ───── телефон ───── */
+@media(max-width:820px){
+  :root{--mw:0px;--tilt:0deg}
+  body{font-size:16px}
+  .top{padding:10px 14px 4px}
+  .dymo{font-size:15px;padding:8px 12px 9px}
+  .tag{min-height:44px;box-shadow:3px 3px 0 var(--blk)}
+  .tr{gap:8px}
+  .mbtn{font-size:14px;padding:8px 6px}
+  .home{padding:12px 16px 40px 22px;place-items:start center}
+  .closed{rotate:-1.2deg}.closed.bye{rotate:1deg}
+  .cover{padding:18px 10px 26px 36px;min-height:0;background:linear-gradient(90deg,var(--blk) 0 26px,var(--cover) 26px);box-shadow:4px 4px 0 var(--paper),4px 4px 0 2.5px var(--blk),11px 11px 0 var(--deskd);border-radius:5px 12px 12px 5px}
+  .wordmark{font-size:clamp(30px,9.6vw,40px);margin:4px 0 18px}
+  .label{margin-right:0;padding:18px 14px 16px;rotate:.8deg;box-shadow:5px 5px 0 var(--blk)}
+  .label h1{font-size:clamp(20px,6.1vw,26px);margin-bottom:10px}
+  .minor{gap:4px 14px}
+  .label .txt{font-size:16px}
+  .recall{font-size:24px}
+  .spiral{left:-10px;width:30px;top:12px;bottom:12px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='24'%3E%3Ccircle cx='22' cy='12' r='4' fill='%23141414'/%3E%3Crect x='3' y='7.5' width='22' height='9' rx='4.5' fill='none' stroke='%23141414' stroke-width='5'/%3E%3Crect x='3' y='7.5' width='22' height='9' rx='4.5' fill='none' stroke='%23D9DDE2' stroke-width='2.2'/%3E%3C/svg%3E")}
+  .work{padding:0 8px}
+  .open{margin:10px 4px 18px 10px}
+  .open::before{inset:-4px -5px -7px -7px;box-shadow:5px 5px 0 var(--deskd);rotate:0deg;border-width:2.5px}
+  .page{padding:14px 12px 36px 32px;min-height:calc(100vh - 330px);background-size:auto,22px 22px,22px 22px,auto}
+  .page::before,.mhead{display:none}
+  .slip{top:0;width:100%;gap:10px;padding:9px 12px 9px 9px;margin-bottom:10px;box-shadow:3px 3px 0 var(--blk);rotate:0deg}
+  .slip .no{font-size:14px;padding:6px 7px 7px}
+  .slip .tp{font-size:12px}
+  .slip .tf{gap:1px}
+  .slip .f{font-size:23px}
+  .tape{width:46px;height:17px;top:-9px}.tape.l{left:-14px}.tape.r{right:-14px}
+  .row{display:block;padding:8px 0;scroll-margin:110px 0 190px}
+  .mine{font-size:21px;padding-right:0}
+  .mine .ln{padding:2px 8px 3px;margin-left:-8px}
+  /* реплика тренера: оторванная полоска жёлтого блокнота под строкой */
+  .coach{margin:12px 2px 6px 20px;background:var(--pad);padding:9px 12px 10px 14px;font-size:21px;border-left:5px solid var(--pen);box-shadow:3px 3px 0 var(--blk)}
+  .coach::before{left:0;right:0;top:-7px;width:auto;height:7px;border:0;rotate:0deg;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='7'%3E%3Cpath d='M0 7L7 0L14 7Z' fill='%23FFE566'/%3E%3C/svg%3E") repeat-x}
+  .coach .who{display:block;font:600 12px/1 var(--ui);color:#5c1a1d;margin-bottom:4px}
+  .row > .mine:empty{display:none}
+  .notice{margin-top:2px}
+  .nhead{padding:14px 12px 12px}.nhead .q{font-size:18px}
+  .strips{display:block}
+  .strip{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:2px 12px;width:100%;margin:-2.5px 0 0;min-height:58px;padding:9px 44px 9px 12px;text-align:left;border-top:2.5px dashed var(--blk)}
+  .strip:first-child{margin-top:0}
+  .strip .sf{font-size:20px}.strip .st{margin-top:0;font-size:13.5px}
+  .strip.torn{align-self:auto;width:calc(100% - 40px);padding:9px 8px 9px 12px;min-height:58px;border-bottom:2.5px solid var(--blk);border-right:0}
+  .strip.torn + .strip{border-top-style:solid}
+  .strip.torn::after{left:auto;right:-10px;top:-2.5px;bottom:-2.5px;width:10px;height:auto;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M0 0V16H3L9 8L3 0Z' fill='%23fff'/%3E%3Cpath d='M3 0L9 8L3 16' fill='none' stroke='%23141414' stroke-width='2.5'/%3E%3C/svg%3E") repeat-y}
+  .strip .loop{left:-9px;top:-4px;width:calc(100% + 18px);height:calc(100% + 8px)}
+  .acts{padding:12px 0 0}
+  .acts .pri{width:100%}
+  .res{width:100%;margin:12px 0 0;padding-top:16px}
+  .res h2{font-size:34px}
+  .res .txt{font-size:17px;padding-right:100px}
+  .big{width:104px;height:104px;right:-4px;top:2px}
+  .skills{font-size:14.5px}
+  .work:has(.composer){padding-bottom:128px}
+  .composer{position:fixed;left:0;right:0;bottom:0;margin:0;border-width:3px 0 0;border-radius:0;box-shadow:none;padding:4px 8px 8px}
+  [data-prev]{min-height:28px;font-size:17px}
+  [data-prev][data-empty]{display:none}
+  .composer [data-prev][data-empty] + .cline{margin-top:4px}
+  .cline{gap:6px}
+  #inp{font-size:16px;padding:8px 10px;min-height:48px}
+  .composer .pri{min-height:48px;padding:8px 14px;font-size:16px}
+  .csub{gap:3px;margin-top:6px}
+  .sym{flex:0 0 40px;width:40px}
+  .csub .ghost{margin-left:3px;flex:1 1 0;min-width:0;padding:6px 2px;font-size:14px}
+  .veil{padding:0;place-items:end center}
+  .veil.full{place-items:stretch}
+  .board{rotate:0deg;width:100%;min-height:100%;border:0;border-radius:0;box-shadow:none;padding:16px 12px 24px 32px;--s:56px;
+    background:radial-gradient(circle at 13px 18px,var(--deskd) 0 5px,transparent 5.6px) 0 10px/26px 36px repeat-y,#EFECE2}
+  .board h2{font-size:25px;padding-top:8px}
+  .bsum{flex-direction:column;align-items:flex-start;gap:16px;margin:16px 0 18px}
+  .sum{padding:14px 36px 18px 32px}
+  .sum .num{font-size:54px}
+  .bsum{gap:12px;margin:12px 0 14px}
+  .next{font-size:21px;max-width:none}
+  .pcap{margin:2px 0 0 6px;flex-basis:100%;font-size:19px}
+  .cell{padding-top:17px}.slot{height:calc(var(--s) - 15px)}.stamp{width:calc(var(--s) - 16px);height:calc(var(--s) - 16px)}
+  .part{margin-bottom:8px}
+  .legend{gap:10px;font-size:12.5px}.legend span{gap:4px}.legend svg{width:18px;height:18px}
+  .card{rotate:0deg;width:100%;border-width:3px 0 0;border-radius:14px 14px 0 0;box-shadow:none;padding:22px 16px 14px}
+  .card{max-height:calc(100vh - var(--bar,0px) - 8px)}
+  .veil.on .card{animation-name:sheet}
+  @keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="ink" x="-12%" y="-12%" width="124%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.5" result="d"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -4.4 3.1" result="m"/>
+    <feComposite in="d" in2="m" operator="in"/>
+  </filter>
+</svg>
+<div id="app"></div>
+<script>
+const {K, rich, SYMS} = Trenya;
+const app = document.getElementById('app');
+let fresh = false;            /* свежий балл: штамп в окне баллов ударит один раз */
+const btn = (a, cls) => a ? `<button class="${cls}" data-act="${a.act}">${a.label}</button>` : '';
+const ROT = [-8, 6, -4, 9, -6, 3, -10, 5, -3, 8, -7, 4];
+const LOOP = `<svg class="loop" viewBox="0 0 200 110" preserveAspectRatio="none" aria-hidden="true"><path d="M92 9C38 6 5 29 7 58c2 33 52 46 104 44 54-2 84-24 81-54C189 19 140 3 72 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
+const TICK = cls => `<svg class="${cls}" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 25c5 4 8 9 11 14C24 26 32 14 42 7" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const REDO = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13.2 1.6v3.2H10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* оттиск штампа: круглый — сам(а), прямоугольный — с подсказкой */
+function stamp(kind, i, cls, txt) {
+  const shape = kind === 'self'
+    ? `<circle cx="24" cy="24" r="19.5" fill="none" stroke="currentColor" stroke-width="3.6"/><circle cx="24" cy="24" r="14.2" fill="none" stroke="currentColor" stroke-width="1.3"/>`
+    : `<rect x="4.5" y="8.5" width="39" height="31" rx="2.5" fill="none" stroke="currentColor" stroke-width="3.6"/><rect x="9" y="13" width="30" height="22" fill="none" stroke="currentColor" stroke-width="1.3" stroke-dasharray="3 2.5"/>`;
+  return `<svg class="${cls || 'stamp'} ${kind}" viewBox="0 0 48 48" style="rotate:${ROT[i % ROT.length]}deg" aria-hidden="true"><g filter="url(#ink)">${shape}<text x="24" y="${txt ? 29.5 : 31}" text-anchor="middle" font-size="${txt ? 15 : 19}">${txt || 1}</text></g></svg>`;
+}
+
+function header(S, T, ev) {
+  return `<header class="top"><span class="dymo">ЕГЭ-треня</span><span class="tr"><button class="mbtn" data-act="menu" aria-haspopup="dialog">${T.menu().label}</button><button class="tag ${ev === 'win' ? 'bump' : ''}" data-act="points" aria-haspopup="dialog"><b>${T.total()}</b> из 32</button></span></header>`;
+}
+
+function home(S, T) { const h = T.home();
+  return `<main class="home"><div class="nb closed"><div class="spiral"></div><div class="cover">
+    <div class="wordmark" aria-hidden="true">ЕГЭ-треня</div>
+    <section class="label">
+      <p class="kick">${h.kicker}${h.badge ? `<span class="badge">${h.badge}</span>` : ''}</p>
+      <h1>${h.title}</h1><p class="txt">${h.text}</p>
+      ${h.recall ? `<div class="recall">${K(h.recall)}</div>` : ''}
+      ${btn(h.primary, 'pri')}
+      <div class="minor">${btn(h.secondary, 'quiet')}${btn(h.own, 'quiet')}</div>
+    </section></div></div><div class="pencil" aria-hidden="true"></div></main>`;
+}
+function bye(S, T) { const b = T.bye();
+  return `<main class="home"><div class="nb closed bye"><div class="spiral"></div><div class="cover">
+    <div class="wordmark" aria-hidden="true">ЕГЭ-треня</div>
+    <section class="label"><h1>${b.title}</h1><p class="txt">${b.text}</p><p class="txt sub">${b.sub}</p>${btn(b.primary, 'pri')}</section>
+  </div></div></main>`;
+}
+
+const slip = (t, T) => { const tp = String(T.topic || '№7').split(' · '), name = tp.slice(1).join(' · ');
+  return `<div class="slip" data-task><i class="tape l"></i><i class="tape r"></i><span class="no">${tp[0]}</span><span class="tf">${name ? `<small class="tp">${name}</small>` : ''}<span class="f">${K(t.tex)}</span></span></div><div class="mhead" aria-hidden="true"><span>Тренер</span></div>`; };
+const coach = (inner, cls) => `<div class="coach ${cls || ''}" aria-live="polite"><span class="who">Тренер</span>${inner}</div>`;
+const book = (inner, after) => `<main class="work"><div class="nb open"><div class="spiral"></div><div class="page">${inner}</div></div>${after || ''}</main>`;
+
+function blitz(S, T, ev) { const B = S.blitz, st = B.steps[B.i], picked = ev === 'pick-ok' || ev === 'pick-miss';
+  const past = B.steps.slice(0, B.end ? 3 : B.i).map(s => `<div class="row"><div class="mine"><span class="ln">${K(s.opts[s.ok].tex)}</span></div>${coach(TICK('ctick') + rich(s.opts[s.ok].why))}</div>`).join('');
+  let cur;
+  if (B.end) cur = `<div class="row" data-last><div class="mine"></div>${coach(B.endText, ev === 'blitz-end' ? 'in' : '')}</div><div class="acts">${btn(B.go, 'pri')}</div>`;
+  else { const tried = B.tried[B.i], lastTorn = tried[tried.length - 1];
+    cur = `<div class="row" data-last><div class="mine"><div class="notice">
+        <div class="nhead"><small>Вопрос ${B.i + 1} из 3</small><div class="q">${rich(st.q)}</div></div>
+        <div class="strips">${st.opts.map((o, j) => { const torn = tried.includes(j), yes = B.ok && j === st.ok, off = B.ok && !yes && !torn;
+          return `<button class="strip ${torn ? 'torn' : ''} ${yes ? 'yes' : ''} ${off ? 'off' : ''} ${picked && ((torn && j === lastTorn && ev === 'pick-miss') || (yes && ev === 'pick-ok')) ? 'now' : ''}" data-act="pick" data-i="${j}" ${torn || (B.ok && !yes) ? 'disabled' : ''} ${yes ? 'aria-pressed="true"' : ''}><span class="sf">${yes ? LOOP : ''}${K(o.tex)}</span>${o.t ? `<span class="st">${o.t}</span>` : ''}</button>`; }).join('')}</div>
+      </div></div>
+      ${coach(B.note ? (B.ok ? TICK('ctick') : '') + rich(B.note) : 'Выбери вариант. Ошибиться здесь нестрашно: баллы не меняются.', picked ? 'in' : '')}</div>
+      <div class="acts">${B.ok ? btn(B.next, 'pri') : ''}${btn(B.skip, 'quiet')}</div>`; }
+  return book(slip(B.task, T) + past + cur);
+}
+
+function work(S, T, ev) { const last = S.rows.length - 1, r = T.result();
+  const rows = S.rows.map((x, i) => { const isLast = i === last, L = isLast && !S.done ? 'data-last' : '';
+    if (x.type === 'line') { const retry = x.mark === 'retry';
+      return `<div class="row ${retry ? 'retry' : ''} ${x.old ? 'old' : ''}" ${L}>
+        <div class="mine ${isLast && ev === 'sent' ? 'in' : ''}"><span class="ln">${K(x.tex)}</span>${retry ? `<span class="redo">${REDO}на доработке</span>` : ''}${isLast && T.canUndo() ? '<button class="quiet" data-act="undo">изменить</button>' : ''}</div>
+        ${x.note === null ? coach('Тренер читает…', 'wait') : coach((retry ? '' : TICK('ctick')) + rich(x.note) + (retry && isLast && !S.done ? '<button class="quiet" data-act="hint">Подсказка</button>' : ''), isLast && (ev === 'reply' || ev === 'win' || ev === 'done') ? 'in' : '')}</div>`; }
+    if (x.type === 'solution') return `<div class="row sol" ${L}><div class="mine"><span class="ln">${K(x.tex)}</span></div>${coach(rich(x.note))}</div>`;
+    return `<div class="row" ${L}><div class="mine"></div>${coach((x.label ? `<span class="lb">${x.label}.</span> ` : '') + rich(x.note), isLast && ev === 'aid' ? 'in' : '')}</div>`; }).join('');
+  let foot = '', comp = '';
+  if (S.done) { const how = S.res.how === 'help' ? 'help' : 'self';
+    foot = `<section class="res" data-last>
+      ${r.plus ? stamp(how, 0, 'big ' + (ev === 'win' ? 'thump' : ''), r.plus) : ''}
+      <h2>${r.title}</h2><p class="txt">${r.text}</p>
+      ${r.skills.length ? `${r.skillsTitle ? `<p class="sktitle">${r.skillsTitle}</p>` : ''}<ul class="skills">${r.skills.map(s => `<li><span>${s.name}</span><em>${s.how}</em></li>`).join('')}</ul>` : ''}
+      <p class="tot">Всего <b>${r.total}</b> из 32</p>
+      <div class="acts">${btn(r.primary, 'pri')}${btn(r.secondary, 'quiet')}</div>
+      ${r.more && r.more.length ? `<div class="more">${r.more.map(m => btn(m, '')).join('')}</div>` : ''}</section>`;
+  } else comp = `<div class="composer"><div data-prev></div>
+      <div class="cline"><input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Следующая строка решения" aria-label="Следующая строка решения"><button class="pri" data-act="send">Отправить</button></div>
+      <div class="csub">${SYMS.map(s => `<button class="sym" data-sym="${s}" aria-label="вставить ${s}">${s}</button>`).join('')}<button class="ghost" data-act="help" aria-haspopup="dialog">Помощь</button></div></div>`;
+  return book(slip(S.task, T) + rows + foot, comp);
+}
+
+function panel(S, T, ev) {
+  if (!S.panel) return '';
+  const on = ev === 'panel' ? 'on' : '';
+  if (S.panel === 'points') { const p = T.points(), hit = fresh && ev === 'panel'; let k = 0;
+    const cell = x => { const got = x.state === 'self' || x.state === 'help';
+      const slots = Array.from({length: x.max}, (_, j) => `<span class="slot">${got ? stamp(x.state, k++, 'stamp ' + (hit && x.n === 7 ? 'thump' : '')) : x.state === 'started' && j === 0 ? TICK('tick') : '<i class="ring"></i>'}</span>`).join('');
+      return `<div class="cell" style="--m:${x.max}" role="img" aria-label="№${x.n}: ${p.legend[x.state]}, баллов: ${x.max}"><span class="n">${x.n}</span><span class="slots">${slots}</span></div>`; };
+    const part = (n, q) => `<div class="part">${p.items.filter(x => x.part === n).map(cell).join('')}<span class="pcap">${q.got} из ${q.max}</span></div>`;
+    if (hit) fresh = false;
+    return `<div class="veil full ${on}" data-panel-backdrop><div class="board" data-panel-root role="dialog" aria-modal="true" aria-label="${p.title}">
+      <button class="ghost x" data-act="close">Закрыть</button>
+      <h2>${p.title}<span class="badge">${p.badge}</span></h2>
+      <div class="bsum"><div class="sum">${LOOP}<small>Всего</small><span class="num">${p.total}</span><span class="of">из ${p.max}</span></div>${p.next ? `<p class="next">${p.next.text}</p>` : ''}</div>
+      ${part(1, p.part1)}${part(2, p.part2)}
+      <p class="legend"><span>${stamp('self', 5)}${p.legend.self}</span><span>${stamp('help', 5)}${p.legend.help}</span><span>${TICK('tick')}${p.legend.started}</span><span><i class="ring"></i>${p.legend.none}</span></p>
+      <p class="bnote">${p.note}</p></div></div>`; }
+  let body = '';
+  if (S.panel === 'help') { const it = T.helpItems();
+    body = `<h2>Помощь</h2>${it.map((h, i) => `<button class="hitem ${i === it.length - 1 ? 'last' : ''}" data-act="${h.act}"><b>${h.label}</b><small>${h.sub}</small></button>`).join('')}<p class="hnote">${T.helpNote}</p>`; }
+  if (S.panel === 'own') { const o = T.ownPanel;
+    body = `<h2>${o.title}</h2><p class="txt">${o.text}</p><input id="own" autocomplete="off" placeholder="${o.placeholder}" aria-label="${o.title}"><label class="sollab" for="ownsol">${o.solLabel}</label><textarea id="ownsol" rows="3" autocomplete="off" spellcheck="false" placeholder="${o.solPlaceholder}"></textarea><button class="pri" data-act="own-send">${o.send}</button><div class="acts"><button class="quiet" data-act="photo">${o.photo}</button></div>`; }
+  if (S.panel === 'menu') { const m = T.menu();
+    body = `<h2>${m.title}</h2><p class="mh">${m.historyTitle}</p>
+      ${m.history.length ? m.history.map((h, i) => `<button class="hist" data-act="hist" data-i="${i}"><span class="hn">№${h.n}</span><span class="hf">${K(h.tex)}</span><small><b>${h.when}</b>${h.status}</small></button>`).join('') : `<p class="mempty">${m.empty}</p>`}
+      <div class="mitems">${m.items.map(it => `<button class="mitem ${it.act === 'logout' ? 'out' : ''}" data-act="${it.act}"><b>${it.label}</b>${it.sub ? `<small>${it.sub}</small>` : ''}</button>`).join('')}</div>`; }
+  return `<div class="veil ${on}" data-panel-backdrop><div class="card" data-panel-root role="dialog" aria-modal="true"><button class="ghost x" data-act="close">Закрыть</button>${body}</div></div>`;
+}
+
+Trenya.create((S, ev, T) => {
+  if (ev === 'win') fresh = true;
+  if (ev === 'init') fresh = false;
+  /* служебная полоса прототипа лежит поверх окна: окно начинается под ней */
+  const tb = document.getElementById('tr-bar');
+  document.documentElement.style.setProperty('--bar', Math.max(0, (tb ? tb.getBoundingClientRect().bottom : 0)) + 'px');
+  const screen = S.screen === 'home' ? home : S.screen === 'blitz' ? blitz : S.screen === 'bye' ? bye : work;
+  app.innerHTML = header(S, T, ev) + screen(S, T, ev) + panel(S, T, ev);
+}, {id: '01-tetrad'});
+</script>
+</body>
+</html>

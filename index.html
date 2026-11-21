@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ЕГЭ-треня · четыре дизайна</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111;color:#fff;font:17px/1.5 Onest,system-ui,sans-serif}
+main{max-width:860px;margin:0 auto;padding:40px 20px 80px}
+h1{font-size:clamp(34px,7vw,64px);line-height:1;margin:0 0 12px;font-weight:800;letter-spacing:-.02em}
+p{margin:0 0 28px;max-width:62ch;color:#cfcfcf}
+ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+a{display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:center;padding:14px 18px;color:#111;text-decoration:none;border:3px solid #fff;box-shadow:6px 6px 0 #fff3;transition:transform .14s cubic-bezier(.23,1,.32,1)}
+a:active{transform:scale(.98)}
+a:focus-visible{outline:4px solid #fff;outline-offset:3px}
+a b{font-size:44px;line-height:1;font-weight:800}
+a strong{display:block;font-size:22px}
+a span{display:block;font-size:15px;opacity:.85}
+li:nth-child(1) a{background:#F28C00}
+li:nth-child(2) a{background:#D8D6D0}
+li:nth-child(3) a{background:#FFD400}
+li:nth-child(4) a{background:#FF5A3C}
+li a.lab{background:#111;color:#fff;border-style:dashed}
+h2{font-size:26px;margin:44px 0 4px;font-weight:800}
+h2+p{margin-bottom:14px}
+a.q{display:inline;padding:0;border:0;box-shadow:none;color:#cfcfcf;text-decoration:underline}
+small{display:block;margin-top:28px;color:#9a9a9a;font-size:14px;max-width:62ch}
+@media(hover:hover) and (pointer:fine){a:hover{transform:translate(-2px,-2px)}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Четыре дизайна</h1>
+  <p>Сценарий и тексты у всех одинаковые: разминка при возвращении, решение по строчке, поле тренера отдельно, окно баллов. Различается только видение. В каждом сверху чёрная служебная полоса: стрелки листают дизайны, «подставить ход» печатает строку за вас.</p>
+  <ol>
+    <li><a href="01-tetrad.html"><b>1</b><div><strong>Тетрадь</strong><span>Тетрадь на пружине: тренер пишет на полях, баллы — штампы на форзаце</span></div></a></li>
+    <li><a href="04-skalodrom.html"><b>2</b><div><strong>Скалодром</strong><span>Тренер на страховке: баллы — зацепы на трассе</span></div></a></li>
+    <li><a href="07-cifra.html"><b>3</b><div><strong>Цифра</strong><span>Гигантские цифры на сигнальном жёлтом: баллы — типографский плакат</span></div></a></li>
+    <li><a href="08-komiks.html"><b>4</b><div><strong>Комикс</strong><span>Страница, нарисованная тушью: заметки тренера на нити, баллы — тропа из цифр</span></div></a></li>
+  </ol>
+  <h2>Идея в работе</h2>
+  <p>В основной набор не входит.</p>
+  <ol>
+    <li><a class="lab" href="lab-svoi-bally.html"><b>?</b><div><strong>Свой вид баллов</strong><span>Ученик описывает словами, как хочет видеть баллы, и получает свой вид</span></div></a></li>
+  </ol>
+  <small>Тренер в прототипе отвечает по сценарию и понимает только уравнения вида log₂(4 − x) = 7. Своя задача и фото подменяются этим примером.</small>
+</main>
+</body>
+</html>
